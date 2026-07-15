@@ -134,6 +134,7 @@
                 <label for="inp-occ">Occupancy Rate (%)</label>
                 <input type="number" id="inp-occ" value="77" min="0" max="100" step="1" />
                 <span class="field-note">AirDNA Abilene annual avg</span>
+                <span class="field-note occ-cap-note" id="occ-cap-note" style="display:none">capped at 95% — practical ceiling</span>
               </div>
             </div>
             <div class="field-row">
@@ -151,6 +152,80 @@
                   <option value="Corporate/Contractor">Corporate / Contractor</option>
                 </select>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2b: New-Listing Ramp -->
+        <div class="calc-section">
+          <button class="calc-section-toggle open" data-target="sec-ramp" type="button">
+            New-Listing Ramp
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="calc-section-body open" id="sec-ramp">
+            <div class="field-row">
+              <div class="field-group">
+                <label for="inp-ramp-enabled">Ramp Mode</label>
+                <select id="inp-ramp-enabled">
+                  <option value="Yes" selected>On — realistic year 1</option>
+                  <option value="No">Off — day-1 stabilized</option>
+                </select>
+                <span class="field-note">Models gradual occupancy/ADR ramp for a new listing</span>
+              </div>
+              <div class="field-group">
+                <label for="inp-payback-rule">Payback Rule (months)</label>
+                <input type="number" id="inp-payback-rule" value="9" min="1" step="1" />
+                <span class="field-note">Ramped payback beyond this fires a risk flag</span>
+              </div>
+            </div>
+            <div id="ramp-fields">
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="inp-make-ready">Make-Ready Month 1?</label>
+                  <select id="inp-make-ready">
+                    <option value="Yes" selected>Yes — zero revenue</option>
+                    <option value="No">No</option>
+                  </select>
+                  <span class="field-note">Setup, photography, listing go-live</span>
+                </div>
+                <div class="field-group">
+                  <label for="inp-rent-free">Month 1 Rent-Free?</label>
+                  <select id="inp-rent-free">
+                    <option value="Yes" selected>Yes — negotiated</option>
+                    <option value="No">No — adds rent to carry</option>
+                  </select>
+                </div>
+              </div>
+              <div class="calc-subsection-title">Ramp Phases (× base occ / ADR)</div>
+              <div class="field-row ramp-phase-row">
+                <div class="field-group">
+                  <label for="inp-ramp1-months">Phase 1 — Months</label>
+                  <input type="number" id="inp-ramp1-months" value="3" min="0" step="1" />
+                </div>
+                <div class="field-group">
+                  <label for="inp-ramp1-occ">Occ Factor</label>
+                  <input type="number" id="inp-ramp1-occ" value="0.85" min="0" max="1.5" step="0.01" />
+                </div>
+                <div class="field-group">
+                  <label for="inp-ramp1-adr">ADR Factor</label>
+                  <input type="number" id="inp-ramp1-adr" value="0.90" min="0" max="1.5" step="0.01" />
+                </div>
+              </div>
+              <div class="field-row ramp-phase-row">
+                <div class="field-group">
+                  <label for="inp-ramp2-months">Phase 2 — Months</label>
+                  <input type="number" id="inp-ramp2-months" value="3" min="0" step="1" />
+                </div>
+                <div class="field-group">
+                  <label for="inp-ramp2-occ">Occ Factor</label>
+                  <input type="number" id="inp-ramp2-occ" value="0.93" min="0" max="1.5" step="0.01" />
+                </div>
+                <div class="field-group">
+                  <label for="inp-ramp2-adr">ADR Factor</label>
+                  <input type="number" id="inp-ramp2-adr" value="0.96" min="0" max="1.5" step="0.01" />
+                </div>
+              </div>
+              <span class="field-note">Final phase: stabilized at 1.00 / 1.00. Occupancy is capped at 95% after factors.</span>
             </div>
           </div>
         </div>
@@ -223,7 +298,8 @@
               </div>
               <div class="field-group">
                 <label for="inp-pricing">Dynamic Pricing (PriceLabs)</label>
-                <input type="number" id="inp-pricing" value="0" min="0" step="1" />
+                <input type="number" id="inp-pricing" value="20" min="0" step="1" />
+                <span class="field-note">$19.99/listing/mo after trial</span>
               </div>
             </div>
             <div class="field-row">
@@ -616,6 +692,7 @@
               <tr><td>Welcome Kits</td><td id="ii-welcome-kits" class="pl-amount pl-cost"></td></tr>
               <tr><td>Legal</td><td id="ii-legal" class="pl-amount pl-cost"></td></tr>
               <tr><td>Miscellaneous</td><td id="ii-misc" class="pl-amount pl-cost"></td></tr>
+              <tr id="ii-carry-row" style="display:none"><td>Month-1 Carry (auto — hover for breakdown)</td><td id="ii-carry" class="pl-amount pl-cost"></td></tr>
               <tr class="pl-divider pl-divider--thick"><td colspan="2"></td></tr>
               <tr class="pl-subtotal"><td>Total Initial Investment</td><td id="ii-total" class="pl-amount pl-cost"></td></tr>
             </tbody>
@@ -623,7 +700,8 @@
           <div class="ii-metrics">
             <div class="res-metric">
               <div class="rmc-val" id="ii-payback">—</div>
-              <div class="rmc-label">Payback Period</div>
+              <div class="rmc-label" id="ii-payback-label">Payback Period</div>
+              <div class="rmc-sub" id="ii-payback-flat" style="display:none" title="assumes day-1 stabilization — optimistic"></div>
             </div>
             <div class="res-metric">
               <div class="rmc-val" id="ii-roi12">—</div>
@@ -846,7 +924,8 @@
 <script>
   import { fmt } from '@lib/formatters';
   import { calcAll, calcMaintenance, getRiskFlags } from '@lib/calculations';
-  import type { AnalysisInputs } from '@lib/calculations';
+  import type { AnalysisInputs, RampSettings } from '@lib/calculations';
+  import { OCC_CAP, PAYBACK_RULE_MONTHS } from '@lib/constants';
   import { supabase } from '@lib/supabase';
   import { requireAuth } from '@lib/auth';
   import { renderVisuals } from '@lib/charts';
@@ -945,9 +1024,31 @@
     };
   }
 
+  function gatherRamp(): RampSettings {
+    return {
+      enabled:           inpStr('inp-ramp-enabled') === 'Yes',
+      makeReadyMonth:    inpStr('inp-make-ready') === 'Yes',
+      rentFreeMonth1:    inpStr('inp-rent-free') === 'Yes',
+      paybackRuleMonths: inp('inp-payback-rule') || PAYBACK_RULE_MONTHS,
+      phases: [
+        { months: inp('inp-ramp1-months'), occFactor: inp('inp-ramp1-occ'), adrFactor: inp('inp-ramp1-adr') },
+        { months: inp('inp-ramp2-months'), occFactor: inp('inp-ramp2-occ'), adrFactor: inp('inp-ramp2-adr') },
+        { months: Infinity, occFactor: 1, adrFactor: 1 },
+      ],
+    };
+  }
+
   function runCalc() {
     const inputs = gatherInputs();
+    const ramp   = gatherRamp();
     const isHOA  = inputs.isHOA;
+
+    // Occupancy > 95% is clamped in the engine; show the inline note here.
+    const capNote = document.getElementById('occ-cap-note');
+    if (capNote) capNote.style.display = inputs.occ > OCC_CAP ? '' : 'none';
+
+    const rampFields = document.getElementById('ramp-fields');
+    if (rampFields) rampFields.style.display = ramp.enabled ? '' : 'none';
 
     document.getElementById('hoa-block')?.classList.toggle('visible', isHOA);
     document.getElementById('hoa-save-block')?.classList.toggle('visible', isHOA);
@@ -963,7 +1064,7 @@
     const maintEl = document.getElementById('inp-maintenance') as HTMLInputElement;
     if (maintEl) maintEl.value = maintenance.toFixed(2);
 
-    const r = calcAll(inputs);
+    const r = calcAll(inputs, ramp);
     lastResults = r;
 
     const staysPerMonth = r.staysPerMonth;
@@ -972,7 +1073,7 @@
     setOut('out-cleaning-collected', fmt(cleaningTotal));
     setOut('out-cleaning-paid',      fmt(cleaningTotal));
 
-    const flags  = getRiskFlags(inputs, r);
+    const flags  = getRiskFlags(inputs, r, ramp.paybackRuleMonths);
     const riskEl = document.getElementById('risk-flags')!;
     riskEl.innerHTML = flags.length === 0
       ? '<div class="risk-flag ok"><span class="risk-flag-icon">✓</span>No risk flags triggered.</div>'
@@ -996,6 +1097,9 @@
     'inp-name', 'inp-address',
     'inp-rent-ask', 'inp-rent-neg', 'inp-deposit', 'inp-hoa', 'inp-walk-away',
     'inp-adr', 'inp-occ', 'inp-stay', 'inp-demand',
+    'inp-ramp-enabled', 'inp-payback-rule', 'inp-make-ready', 'inp-rent-free',
+    'inp-ramp1-months', 'inp-ramp1-occ', 'inp-ramp1-adr',
+    'inp-ramp2-months', 'inp-ramp2-occ', 'inp-ramp2-adr',
     'inp-electricity', 'inp-water', 'inp-sewer', 'inp-garbage',
     'inp-internet', 'inp-insurance',
     'inp-supplies', 'inp-linens',
@@ -1117,6 +1221,12 @@
   }
 
   function applyFormInputs(inputs: Record<string, string>) {
+    // Analyses saved before ramp mode existed carry no ramp fields: default
+    // them to ramp OFF so their stored numbers still reproduce.
+    if (!('inp-ramp-enabled' in inputs)) {
+      const rampEl = document.getElementById('inp-ramp-enabled') as HTMLSelectElement | null;
+      if (rampEl) rampEl.value = 'No';
+    }
     Object.entries(inputs).forEach(([id, val]) => {
       const el = document.getElementById(id) as HTMLInputElement | null;
       if (el && !el.disabled && !el.readOnly) el.value = val;
@@ -1132,7 +1242,10 @@
       fixed: r.fixed, maintenance: r.maintenance, staysPerMonth: r.staysPerMonth,
       netMonthly: r.netMonthly, netAnnual: r.netAnnual, breakEvenOcc: r.breakEvenOcc,
       margin: r.margin, multiple: r.multiple, totalInvest: r.totalInvest,
-      payback: r.payback, roi12: r.roi12, roi24: r.roi24,
+      payback: isFinite(r.payback) ? r.payback : null,
+      roi12: r.roi12, roi24: r.roi24,
+      rampEnabled: r.rampEnabled, month1Carry: r.month1Carry,
+      paybackRamped: r.paybackRamped != null && isFinite(r.paybackRamped) ? r.paybackRamped : null,
     };
   }
 
@@ -1242,10 +1355,13 @@
       'inp-rent-ask': '1400', 'inp-rent-neg': '1200', 'inp-deposit': '1400', 'inp-hoa': 'No',
       'inp-adr': '167', 'inp-occ': '77', 'inp-stay': '3.2', 'inp-demand': 'Military TDY',
       'inp-walk-away': '1750',
+      'inp-ramp-enabled': 'Yes', 'inp-payback-rule': '9', 'inp-make-ready': 'Yes', 'inp-rent-free': 'Yes',
+      'inp-ramp1-months': '3', 'inp-ramp1-occ': '0.85', 'inp-ramp1-adr': '0.90',
+      'inp-ramp2-months': '3', 'inp-ramp2-occ': '0.93', 'inp-ramp2-adr': '0.96',
       'inp-electricity': '130', 'inp-water': '45', 'inp-sewer': '50', 'inp-garbage': '24',
       'inp-internet': '80', 'inp-insurance': '100',
       'inp-supplies': '120', 'inp-linens': '41',
-      'inp-pms': '39', 'inp-pricing': '0',
+      'inp-pms': '39', 'inp-pricing': '20',
       'inp-minut-subscription': '10', 'inp-streaming': '8', 'inp-airbnb-fee-type': '3%',
       'inp-has-yard': 'No', 'inp-lawn-care': '0', 'inp-pest-control': '51', 'inp-bulk-pickup': '8',
       'inp-preventive-inspection': '50', 'inp-hvac-filters': '10', 'inp-cpa': '42',
@@ -1277,6 +1393,7 @@
   document.getElementById('btn-export')!.addEventListener('click', () => {
     if (!lastResults) return;
     const inputs = gatherInputs();
+    const ramp   = gatherRamp();
     exportMarkdown(inputs, lastResults, {
       name:         inpStr('inp-name'),
       address:      inpStr('inp-address'),
@@ -1284,8 +1401,8 @@
       bathrooms:    inpStr('inp-bathrooms'),
       propertyType: inpStr('inp-type'),
       notes:        inpStr('inp-notes'),
-      riskFlags:    getRiskFlags(inputs, lastResults),
-    });
+      riskFlags:    getRiskFlags(inputs, lastResults, ramp.paybackRuleMonths),
+    }, ramp);
   });
   document.getElementById('btn-new')!.addEventListener('click', () => {
     resetForm();
@@ -1414,6 +1531,8 @@
   select option { background: #ffffff; color: #0f1f2e; }
   textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
   .field-note { font-size: .72rem; color: #7a6e65; line-height: 1.4; font-style: italic; margin-top: 2px; }
+  .occ-cap-note { color: #b07a10; }
+  .ramp-phase-row { grid-template-columns: 1fr 1fr 1fr; }
   .field-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border: 1px solid rgba(201,169,110,.2); border-radius: 2px; font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(201,169,110,.6); font-style: normal; }
 
   .hoa-block { display: none; background: rgba(201,74,74,.12); border: 2px solid #c94a4a; border-radius: 2px; padding: 16px 18px; margin-top: 12px; }
@@ -1458,6 +1577,7 @@
   :global(.risk-flag.warn)   { background: rgba(212,163,42,.1); border: 1px solid rgba(212,163,42,.25); color: rgba(150,115,20,.9); }
   :global(.risk-flag.danger) { background: rgba(201,74,74,.1); border: 1px solid rgba(201,74,74,.3); color: rgba(180,55,55,.9); }
   :global(.risk-flag.ok)     { background: rgba(76,175,129,.08); border: 1px solid rgba(76,175,129,.18); color: rgba(29,130,95,.9); font-size: .68rem; }
+  :global(.risk-flag.info)   { background: rgba(55,138,221,.07); border: 1px solid rgba(55,138,221,.2); color: rgba(35,95,160,.9); }
   :global(.risk-flag-icon) { flex-shrink: 0; font-size: .7rem; line-height: 1; }
 
   .calc-actions { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 16px; border-top: 1px solid rgba(201,169,110,.1); }

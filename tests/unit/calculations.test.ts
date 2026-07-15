@@ -3,10 +3,14 @@ import {
   calcMaintenance,
   calcFixedCosts,
   calcAll,
+  calcMonth1Carry,
+  calcRampMonthlyNets,
+  defaultRampSettings,
   getScenariosData,
   getRiskFlags,
   type AnalysisInputs,
 } from '@lib/calculations';
+import { capOcc, OCC_CAP } from '@lib/constants';
 
 // ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -210,13 +214,17 @@ describe('getScenariosData', () => {
     expect(rows[2].netMonthly).toBeLessThan(rows[1].netMonthly);
   });
 
-  it('occupancy does not exceed 100 in best case', () => {
-    // occ = 95 + 15 delta would push past 100 without clamping
-    const rows = getScenariosData(167, 95, 1819);
-    expect(rows[0].occ).toBeLessThanOrEqual(110); // label occ is raw, sOcc is clamped
-    const sOccBest = Math.min(Math.max((95 + 15) / 100, 0), 1);
-    const expectedGross = rows[0].adr * sOccBest * 30;
+  it('caps best-case occupancy at the 95% practical ceiling', () => {
+    // occ = 88 + 15 delta = 103 would exceed 100% without the cap
+    const rows = getScenariosData(167, 88, 1819);
+    expect(rows[0].occ).toBe(95);
+    const expectedGross = rows[0].adr * 0.95 * 30;
     expect(rows[0].netMonthly).toBeCloseTo(expectedGross * (1 - 0.03) - 1819, 0);
+  });
+
+  it('never renders occupancy above 95 for any scenario', () => {
+    const rows = getScenariosData(167, 100, 1819);
+    rows.forEach(row => expect(row.occ).toBeLessThanOrEqual(95));
   });
 });
 
@@ -309,5 +317,192 @@ describe('getRiskFlags', () => {
     const r = calcAll(inputs);
     const flags = getRiskFlags(inputs, r);
     expect(flags.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('fires the Marginal flag when rent is 34.2% of gross revenue', () => {
+    // ADR 166 × 88% × 30 = $4,382 gross; rent $1,500 → 34.2%
+    const inputs = { ...BASE_INPUTS, rentNeg: 1500, adr: 166, occ: 88 };
+    const r = calcAll(inputs);
+    expect((inputs.rentNeg / r.grossRevenue) * 100).toBeCloseTo(34.2, 1);
+    const flags = getRiskFlags(inputs, r);
+    expect(flags.some(f => f.type === 'warn' && f.text.startsWith('Marginal'))).toBe(true);
+    expect(flags.some(f => f.text.startsWith('Walk'))).toBe(false);
+  });
+
+  it('fires the Walk flag when rent is 46% of gross revenue', () => {
+    const inputs = { ...BASE_INPUTS, rentNeg: 2016, adr: 166, occ: 88 };
+    const r = calcAll(inputs);
+    expect((inputs.rentNeg / r.grossRevenue) * 100).toBeCloseTo(46.0, 1);
+    const flags = getRiskFlags(inputs, r);
+    expect(flags.some(f => f.type === 'danger' && f.text.startsWith('Walk'))).toBe(true);
+    expect(flags.some(f => f.text.startsWith('Marginal'))).toBe(false);
+  });
+
+  it('does not fire rent-to-gross flags at or below 33%', () => {
+    // ADR 167 × 77% × 30 = $3,858 gross; rent $1,200 → 31.1%
+    const r = calcAll(BASE_INPUTS);
+    const flags = getRiskFlags(BASE_INPUTS, r);
+    expect(flags.some(f => f.text.startsWith('Marginal') || f.text.startsWith('Walk'))).toBe(false);
+  });
+
+  it('fires the payback-rule flag when ramped payback exceeds the rule', () => {
+    const inputs = { ...BASE_INPUTS, furniture: 20000 };
+    const r = calcAll(inputs, defaultRampSettings());
+    expect(r.paybackRamped!).toBeGreaterThan(9);
+    const flags = getRiskFlags(inputs, r, 9);
+    expect(flags.some(f => f.type === 'danger' && f.text.includes('9-month rule'))).toBe(true);
+  });
+
+  it('fires an info flag when the occupancy input was capped', () => {
+    const inputs = { ...BASE_INPUTS, occ: 103 };
+    const r = calcAll(inputs);
+    expect(r.occCapped).toBe(true);
+    const flags = getRiskFlags(inputs, r);
+    expect(flags.some(f => f.type === 'info' && f.text.includes('capped at 95%'))).toBe(true);
+  });
+});
+
+// ── capOcc / occupancy ceiling ────────────────────────────────────────────────
+
+describe('capOcc', () => {
+  it('caps values above 95 and passes lower values through', () => {
+    expect(capOcc(103)).toBe(OCC_CAP);
+    expect(capOcc(95)).toBe(95);
+    expect(capOcc(77)).toBe(77);
+  });
+
+  it('calcAll computes revenue from the capped occupancy', () => {
+    const capped = calcAll({ ...BASE_INPUTS, occ: 103 });
+    const at95   = calcAll({ ...BASE_INPUTS, occ: 95 });
+    expect(capped.grossRevenue).toBeCloseTo(at95.grossRevenue, 4);
+    expect(capped.occCapped).toBe(true);
+    expect(at95.occCapped).toBe(false);
+  });
+});
+
+// ── Break-even occupancy (fee-adjusted) ───────────────────────────────────────
+
+describe('breakEvenOcc', () => {
+  it('matches the fee-adjusted formula: $2,541 fixed, $166 ADR, 3% fee → ≈52.6%', () => {
+    // Fixture engineered so calcFixedCosts totals exactly $2,541
+    const inputs: AnalysisInputs = {
+      ...BASE_INPUTS,
+      rentNeg: 1500, adr: 166, occ: 88, utilities: 0,
+      electricity: 130, water: 45, sewer: 50, garbage: 24, internet: 80,
+      insurance: 100, supplies: 266, linens: 41,
+      pms: 39, pricing: 20, minutSubscription: 10, streaming: 8,
+      pestControl: 51, preventiveInspection: 50, hvacFilters: 10, cpa: 42,
+    };
+    const r = calcAll(inputs);
+    expect(r.fixed).toBeCloseTo(2541, 4);
+    expect(r.breakEvenOcc).toBeCloseTo(2541 / (166 * 30 * 0.97) * 100, 1); // ≈ 52.6
+    expect(r.breakEvenOcc).toBeCloseTo(52.6, 1);
+  });
+});
+
+// ── Ramp mode ─────────────────────────────────────────────────────────────────
+
+// Encino regression fixture: rent $1,500, ADR $166, occ 88%, fixed $2,541,
+// one-time investment $13,350 (+ month-1 carry).
+const ENCINO_INPUTS: AnalysisInputs = {
+  ...BASE_INPUTS,
+  rentNeg: 1500, adr: 166, occ: 88, utilities: 0,
+  electricity: 130, water: 45, sewer: 50, garbage: 24, internet: 80,
+  insurance: 100, supplies: 266, linens: 41,
+  pms: 39, pricing: 20, minutSubscription: 10, streaming: 8,
+  pestControl: 51, preventiveInspection: 50, hvacFilters: 10, cpa: 42,
+  deposit: 13350, furniture: 0, photo: 0, lock: 0, legal: 0, misc: 0,
+};
+
+describe('calcMonth1Carry', () => {
+  it('sums utilities, insurance, tech subscriptions, lawn care, and pest control', () => {
+    const { total } = calcMonth1Carry(ENCINO_INPUTS, true);
+    // 329 utilities + 100 insurance + 77 tech + 51 pest control
+    expect(total).toBeCloseTo(557, 4);
+  });
+
+  it('excludes revenue- and occupancy-driven lines', () => {
+    const { breakdown } = calcMonth1Carry(ENCINO_INPUTS, true);
+    const labels = breakdown.map(b => b.label).join();
+    expect(labels).not.toMatch(/Supplies|Linens|Maintenance|Inspection|HVAC|CPA|Airbnb|Cleaning/);
+  });
+
+  it('adds one month of rent when month 1 is not rent-free', () => {
+    const rentFree = calcMonth1Carry(ENCINO_INPUTS, true);
+    const notFree  = calcMonth1Carry(ENCINO_INPUTS, false);
+    expect(notFree.total - rentFree.total).toBeCloseTo(ENCINO_INPUTS.rentNeg, 4);
+  });
+
+  it('includes lawn care only when the property has a yard', () => {
+    const withYard = calcMonth1Carry({ ...ENCINO_INPUTS, hasYard: true, lawnCare: 78 }, true);
+    const noYard   = calcMonth1Carry({ ...ENCINO_INPUTS, hasYard: false, lawnCare: 78 }, true);
+    expect(withYard.total - noYard.total).toBeCloseTo(78, 4);
+  });
+});
+
+describe('ramp mode (calcAll with RampSettings)', () => {
+  it('includes month-1 carry in total initial investment', () => {
+    const r = calcAll(ENCINO_INPUTS, defaultRampSettings());
+    expect(r.month1Carry).toBeCloseTo(557, 4);
+    expect(r.totalInvest).toBeCloseTo(13350 + 557, 4);
+  });
+
+  it('Encino regression: flat payback ≈ 8.2 months, ramped ≈ 12 months', () => {
+    const r = calcAll(ENCINO_INPUTS, defaultRampSettings());
+    expect(r.payback).toBeGreaterThan(7.8);
+    expect(r.payback).toBeLessThan(8.5);
+    expect(r.paybackRamped!).toBeGreaterThan(11.2);
+    expect(r.paybackRamped!).toBeLessThan(12.5);
+  });
+
+  it('ramp off reproduces the legacy flat model', () => {
+    const flat = calcAll(ENCINO_INPUTS);
+    const rampOff = calcAll(ENCINO_INPUTS, { ...defaultRampSettings(), enabled: false });
+    expect(rampOff.totalInvest).toBeCloseTo(13350, 4);
+    expect(rampOff.paybackRamped).toBeNull();
+    expect(rampOff.roi12).toBeCloseTo(flat.roi12, 4);
+    expect(rampOff.month1Carry).toBe(0);
+  });
+
+  it('month 1 has zero operating cash when make-ready is on', () => {
+    const nets = calcRampMonthlyNets(88, 166, defaultRampSettings(), 2541, 0.03);
+    expect(nets).toHaveLength(24);
+    expect(nets[0]).toBe(0);
+  });
+
+  it('phase nets recompute gross and fee per phase rather than scaling stabilized net', () => {
+    const nets = calcRampMonthlyNets(88, 166, defaultRampSettings(), 2541, 0.03);
+    // Phase 1 (months 2–4): occ 88×0.85=74.8%, ADR 166×0.90=149.4
+    const p1Gross = 149.4 * 0.748 * 30;
+    expect(nets[1]).toBeCloseTo(p1Gross * 0.97 - 2541, 1);
+    // Stabilized (month 8+) matches the flat monthly net
+    const flatNet = 166 * 0.88 * 30 * 0.97 - 2541;
+    expect(nets[8]).toBeCloseTo(flatNet, 1);
+  });
+
+  it('caps ramp-phase occupancy at 95 after applying the factor', () => {
+    const ramp = defaultRampSettings();
+    ramp.phases[0].occFactor = 1.5; // 88 × 1.5 = 132 → capped at 95
+    const nets = calcRampMonthlyNets(88, 166, ramp, 2541, 0.03);
+    const cappedGross = (166 * 0.90) * 0.95 * 30;
+    expect(nets[1]).toBeCloseTo(cappedGross * 0.97 - 2541, 1);
+  });
+
+  it('computes 12- and 24-month ROI from the ramped curve', () => {
+    const ramp = defaultRampSettings();
+    const r = calcAll(ENCINO_INPUTS, ramp);
+    const nets = calcRampMonthlyNets(88, 166, ramp, r.fixed, 0.03);
+    const sum12 = nets.slice(0, 12).reduce((s, n) => s + n, 0);
+    expect(r.roi12).toBeCloseTo((sum12 / r.totalInvest) * 100, 2);
+    const flat = calcAll(ENCINO_INPUTS, { ...ramp, enabled: false });
+    expect(r.roi12).toBeLessThan(flat.roi12);
+  });
+
+  it('rent-free toggle changes the carry and both payback figures', () => {
+    const rentFree = calcAll(ENCINO_INPUTS, defaultRampSettings());
+    const notFree  = calcAll(ENCINO_INPUTS, { ...defaultRampSettings(), rentFreeMonth1: false });
+    expect(notFree.month1Carry - rentFree.month1Carry).toBeCloseTo(1500, 4);
+    expect(notFree.paybackRamped!).toBeGreaterThan(rentFree.paybackRamped!);
+    expect(notFree.payback).toBeGreaterThan(rentFree.payback);
   });
 });
