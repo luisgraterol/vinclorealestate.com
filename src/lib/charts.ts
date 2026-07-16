@@ -1,7 +1,8 @@
 import { Chart } from 'chart.js/auto';
-import { fmtK, gaugeAngle, metricCardClass, badgeState, getMonthlyProfile } from '@lib/visualLogic';
-import { capOcc, RENT_TO_GROSS_HEALTHY_MAX, RENT_TO_GROSS_WALK } from '@lib/constants';
-import type { AnalysisInputs, AnalysisResults } from '@lib/calculations';
+import { fmtK, gaugeAngle, metricCardClass, badgeState, getMonthlyProfile, monthWindow } from '@lib/visualLogic';
+import { capOcc, OCC_CAP, RENT_TO_GROSS_HEALTHY_MAX, RENT_TO_GROSS_WALK } from '@lib/constants';
+import { expandRampFactors } from '@lib/calculations';
+import type { AnalysisInputs, AnalysisResults, RampSettings } from '@lib/calculations';
 
 export interface RenderContext {
   propertiesList: any[];
@@ -13,6 +14,7 @@ export interface RenderContext {
   bathrooms: string;
   propertyType: string;
   isHOA: boolean;
+  ramp?: RampSettings;
 }
 
 const C = { green: '#1D9E75', blue: '#378ADD', red: '#E24B4A' };
@@ -195,14 +197,31 @@ export function renderVisuals(inputs: AnalysisInputs, r: AnalysisResults, ctx: R
   const airbnbRate = inputs.airbnbFeeType === '15.5%' ? 0.155 : 0.03;
   const profile = getMonthlyProfile(ctx.driver, occPct);
   const months  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const monthlyNets   = profile.occs.map(occ => occ * inputs.adr * 30 * (1 - airbnbRate) - r.fixed);
+  // Window starts at the next full month (current month is already underway).
+  const window      = monthWindow();
+  const monthLabels = window.map(i => months[i]);
+  // With ramp mode on, the first bars reflect the ramp: a zero-revenue
+  // make-ready month (or rent added back if month 1 is rent-free without
+  // make-ready), then phase factors applied on top of seasonality.
+  const rampOn  = r.rampEnabled && ctx.ramp?.enabled;
+  const factors = rampOn ? expandRampFactors(ctx.ramp!, 12) : null;
+  const monthlyNets = window.map((mi, m) => {
+    const f = factors ? factors[m] : { occFactor: 1, adrFactor: 1 };
+    if (!f) return 0; // make-ready month — carry is capitalized, no revenue
+    const occ = Math.min(profile.occs[mi] * f.occFactor, OCC_CAP / 100);
+    let net = inputs.adr * f.adrFactor * occ * 30 * (1 - airbnbRate) - r.fixed;
+    if (m === 0 && factors && !ctx.ramp!.makeReadyMonth && ctx.ramp!.rentFreeMonth1) {
+      net += inputs.rentNeg;
+    }
+    return net;
+  });
   const monthlyColors = monthlyNets.map(v => v >= 0 ? C.green : C.red);
 
   if (!chartMonthly) {
     const c2 = (document.getElementById('chart-monthly') as HTMLCanvasElement).getContext('2d')!;
     chartMonthly = new Chart(c2, {
       type: 'bar',
-      data: { labels: months, datasets: [{ data: monthlyNets, backgroundColor: monthlyColors, borderWidth: 0, borderRadius: 2 }] },
+      data: { labels: monthLabels, datasets: [{ data: monthlyNets, backgroundColor: monthlyColors, borderWidth: 0, borderRadius: 2 }] },
       options: {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false } },
@@ -216,11 +235,14 @@ export function renderVisuals(inputs: AnalysisInputs, r: AnalysisResults, ctx: R
   } else {
     const ds = chartMonthly.data.datasets[0];
     ds.data = monthlyNets; (ds as any).backgroundColor = monthlyColors;
+    chartMonthly.data.labels = monthLabels;
     chartMonthly.update();
   }
   const occRange = Math.round((Math.max(...profile.occs) - Math.min(...profile.occs)) * 100);
   document.getElementById('monthly-footnote')!.textContent =
-    `Based on ${profile.marketType} demand profile (${ctx.driver}). ±${occRange}pp occupancy variance applied monthly. Dashed line = break-even at $0.`;
+    `Starts next full month. Based on ${profile.marketType} demand profile (${ctx.driver}). ±${occRange}pp occupancy variance applied monthly.` +
+    (rampOn ? ' New-listing ramp applied to the first months.' : '') +
+    ' Dashed line = break-even at $0.';
   document.getElementById('market-note')!.textContent = profile.note;
 
   // 5: ROI curve — ramped monthly nets when ramp mode is on, so the crossover

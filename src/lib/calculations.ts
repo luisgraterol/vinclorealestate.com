@@ -213,6 +213,22 @@ function phaseNet(
   return { occ, adr, gross, net };
 }
 
+// Expands ramp settings into one entry per month for months 1..horizon:
+// null = make-ready month (zero revenue), otherwise the phase in effect.
+// Phases past the configured ones extend with the last phase.
+export function expandRampFactors(ramp: RampSettings, horizon = 24): Array<RampPhase | null> {
+  const out: Array<RampPhase | null> = [];
+  if (ramp.makeReadyMonth) out.push(null);
+  for (const phase of ramp.phases) {
+    const count = isFinite(phase.months) ? phase.months : horizon - out.length;
+    for (let i = 0; i < count && out.length < horizon; i++) out.push(phase);
+    if (out.length >= horizon) break;
+  }
+  const last = ramp.phases[ramp.phases.length - 1] ?? { months: Infinity, occFactor: 1, adrFactor: 1 };
+  while (out.length < horizon) out.push(last);
+  return out;
+}
+
 // Month-by-month operating nets under ramp mode, months 1..horizon.
 // Month 1 is zero-revenue/zero-cost when makeReadyMonth is on (its carry costs
 // are capitalized into the initial investment); phases run from then on, with
@@ -225,20 +241,9 @@ export function calcRampMonthlyNets(
   airbnbRate: number,
   horizon = 24,
 ): number[] {
-  const nets: number[] = [];
-  if (ramp.makeReadyMonth) nets.push(0);
-  for (const phase of ramp.phases) {
-    const { net } = phaseNet(baseOccPct, baseAdr, phase, fixed, airbnbRate);
-    const count = isFinite(phase.months) ? phase.months : horizon - nets.length;
-    for (let i = 0; i < count && nets.length < horizon; i++) nets.push(net);
-    if (nets.length >= horizon) break;
-  }
-  // If phases ran out before the horizon, extend with the last phase's net.
-  while (nets.length < horizon) {
-    const last = ramp.phases[ramp.phases.length - 1];
-    nets.push(phaseNet(baseOccPct, baseAdr, last, fixed, airbnbRate).net);
-  }
-  return nets;
+  return expandRampFactors(ramp, horizon).map(phase =>
+    phase ? phaseNet(baseOccPct, baseAdr, phase, fixed, airbnbRate).net : 0,
+  );
 }
 
 // Fractional payback month from a monthly-net curve starting at −totalInvest.
@@ -294,6 +299,11 @@ export function calcAll(inputs: AnalysisInputs, ramp?: RampSettings): AnalysisRe
   let rampMonthlyNets: number[] = [];
   if (rampEnabled && ramp) {
     rampMonthlyNets = calcRampMonthlyNets(occPct, inputs.adr, ramp, fixed, airbnbRate);
+    // No make-ready month: month 1 operates normally, so a rent-free month 1
+    // shows up as rent added back to that month's net (not as carry).
+    if (!ramp.makeReadyMonth && ramp.rentFreeMonth1 && rampMonthlyNets.length) {
+      rampMonthlyNets[0] += inputs.rentNeg;
+    }
     paybackRamped = paybackFromCurve(totalInvest, rampMonthlyNets, netMonthly);
     if (totalInvest > 0) {
       roi12 = rampMonthlyNets.slice(0, 12).reduce((s, n) => s + n, 0) / totalInvest * 100;
@@ -305,6 +315,7 @@ export function calcAll(inputs: AnalysisInputs, ramp?: RampSettings): AnalysisRe
       startMonth = 2;
     }
     ramp.phases.forEach((phase, i) => {
+      if (phase.months <= 0) return; // zero-length phases contribute nothing
       const p = phaseNet(occPct, inputs.adr, phase, fixed, airbnbRate);
       const label = isFinite(phase.months)
         ? `Phase ${i + 1} (mo ${startMonth}–${startMonth + phase.months - 1})`

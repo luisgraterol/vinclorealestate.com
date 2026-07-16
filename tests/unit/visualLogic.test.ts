@@ -5,6 +5,7 @@ import {
   metricCardClass,
   badgeState,
   getMonthlyProfile,
+  monthWindow,
 } from '@lib/visualLogic';
 
 // ── fmtK ─────────────────────────────────────────────────────────────────────
@@ -280,5 +281,25 @@ describe('getMonthlyProfile — occupancy scaling', () => {
     // University Events October factor = 1.15; 100% occ × 1.15 would be 1.15 → clamp to 1
     const { occs } = getMonthlyProfile('University Events', 100);
     occs.forEach(o => expect(o).toBeLessThanOrEqual(1));
+  });
+});
+// ── monthWindow ──────────────────────────────────────────────────────────────
+
+describe('monthWindow', () => {
+  it('starts at the next full month (Jul 16 → Aug)', () => {
+    const w = monthWindow(new Date(2026, 6, 16)); // July 16
+    expect(w[0]).toBe(7); // Aug
+    expect(w).toHaveLength(12);
+  });
+
+  it('starts at the next month even on the 1st (Aug 1 → Sep)', () => {
+    const w = monthWindow(new Date(2026, 7, 1)); // Aug 1
+    expect(w[0]).toBe(8); // Sep
+  });
+
+  it('wraps across the year boundary (Dec → Jan)', () => {
+    const w = monthWindow(new Date(2026, 11, 5)); // Dec
+    expect(w[0]).toBe(0); // Jan
+    expect(w[11]).toBe(11); // Dec of next year
   });
 });
