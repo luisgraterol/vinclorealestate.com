@@ -45,6 +45,14 @@ export function badgeState(rentNeg: number, walkAway: number): BadgeState {
   return { show: false, type: null, text: '' };
 }
 
+// Returns 12 calendar-month indices (0 = Jan) starting at the next full month
+// after `from`: on Jul 16 the window starts in Aug; on Aug 1 it starts in Sep,
+// since the current month is already underway.
+export function monthWindow(from: Date = new Date()): number[] {
+  const start = (from.getMonth() + 1) % 12;
+  return Array.from({ length: 12 }, (_, i) => (start + i) % 12);
+}
+
 export interface MonthlyProfile {
   marketType: string;
   note: string;

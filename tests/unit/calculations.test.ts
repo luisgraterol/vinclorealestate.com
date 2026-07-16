@@ -5,6 +5,7 @@ import {
   calcAll,
   calcMonth1Carry,
   calcRampMonthlyNets,
+  expandRampFactors,
   defaultRampSettings,
   getScenariosData,
   getRiskFlags,
@@ -504,5 +505,34 @@ describe('ramp mode (calcAll with RampSettings)', () => {
     expect(notFree.month1Carry - rentFree.month1Carry).toBeCloseTo(1500, 4);
     expect(notFree.paybackRamped!).toBeGreaterThan(rentFree.paybackRamped!);
     expect(notFree.payback).toBeGreaterThan(rentFree.payback);
+  });
+});
+
+// ── Ramp edge cases (post-review fixes) ──────────────────────────────────────
+
+describe('ramp edge cases', () => {
+  it('credits rent back to month 1 when rent-free without a make-ready month', () => {
+    const ramp = { ...defaultRampSettings(), makeReadyMonth: false };
+    const rentFree = calcAll(ENCINO_INPUTS, { ...ramp, rentFreeMonth1: true });
+    const notFree  = calcAll(ENCINO_INPUTS, { ...ramp, rentFreeMonth1: false });
+    expect(rentFree.rampMonthlyNets[0] - notFree.rampMonthlyNets[0]).toBeCloseTo(1500, 4);
+    expect(rentFree.paybackRamped!).toBeLessThan(notFree.paybackRamped!);
+  });
+
+  it('omits zero-length phases from the ramp table rows', () => {
+    const ramp = defaultRampSettings();
+    ramp.phases[0].months = 0;
+    const r = calcAll(ENCINO_INPUTS, ramp);
+    expect(r.rampRows.some(row => row.phase.startsWith('Phase 1'))).toBe(false);
+    expect(r.rampRows.some(row => /mo 2–1/.test(row.phase))).toBe(false);
+  });
+
+  it('expandRampFactors marks the make-ready month null and fills the horizon', () => {
+    const f = expandRampFactors(defaultRampSettings(), 12);
+    expect(f[0]).toBeNull();
+    expect(f[1]!.occFactor).toBe(0.85);
+    expect(f[4]!.occFactor).toBe(0.93);
+    expect(f[7]!.occFactor).toBe(1);
+    expect(f).toHaveLength(12);
   });
 });

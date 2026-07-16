@@ -1089,6 +1089,7 @@
       bathrooms: inpStr('inp-bathrooms'),
       propertyType: inpStr('inp-type'),
       isHOA,
+      ramp,
     };
     renderVisuals(inputs, r, ctx);
   }
@@ -1117,17 +1118,20 @@
 
   // ── Has Yard toggle ───────────────────────────────────────────────────────────
 
-  document.getElementById('inp-has-yard')?.addEventListener('change', () => {
+  // Keeps the lawn-care field's editability in sync with Has Yard. Must run
+  // whenever inp-has-yard changes programmatically too (loading a saved
+  // analysis, reset), not just on user interaction.
+  function syncLawnField(setDefault: boolean) {
     const hasYard = inpStr('inp-has-yard') === 'Yes';
     const lawnEl = document.getElementById('inp-lawn-care') as HTMLInputElement;
     if (!lawnEl) return;
-    if (hasYard) {
-      lawnEl.readOnly = false;
-      lawnEl.value = '78';
-    } else {
-      lawnEl.value = '0';
-      lawnEl.readOnly = true;
-    }
+    lawnEl.readOnly = !hasYard;
+    if (!hasYard) lawnEl.value = '0';
+    else if (setDefault) lawnEl.value = '78';
+  }
+
+  document.getElementById('inp-has-yard')?.addEventListener('change', () => {
+    syncLawnField(true);
     runCalc();
   });
 
@@ -1231,6 +1235,14 @@
       const el = document.getElementById(id) as HTMLInputElement | null;
       if (el && !el.disabled && !el.readOnly) el.value = val;
     });
+    // Lawn care is readOnly while Has Yard is No, so the loop above skipped
+    // it. Sync its editability to the loaded Has Yard value, then restore the
+    // saved amount.
+    syncLawnField(false);
+    if (inpStr('inp-has-yard') === 'Yes' && 'inp-lawn-care' in inputs) {
+      const lawnEl = document.getElementById('inp-lawn-care') as HTMLInputElement | null;
+      if (lawnEl) lawnEl.value = inputs['inp-lawn-care'];
+    }
     runCalc();
   }
 
@@ -1374,6 +1386,7 @@
       const el = document.getElementById(id) as HTMLInputElement | null;
       if (el) el.value = val;
     });
+    syncLawnField(false);
     const propSelect = document.getElementById('inp-property') as HTMLSelectElement;
     if (propSelect) propSelect.value = '';
 
