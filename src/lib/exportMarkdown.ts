@@ -1,5 +1,6 @@
 import { fmt, fmtPct, fmtX } from '@lib/formatters';
-import type { AnalysisInputs, AnalysisResults, RiskFlag } from '@lib/calculations';
+import { calcAll } from '@lib/calculations';
+import type { AnalysisInputs, AnalysisResults, RampSettings, RiskFlag } from '@lib/calculations';
 
 export interface ExportMeta {
   name: string;
@@ -11,15 +12,57 @@ export interface ExportMeta {
   riskFlags: RiskFlag[];
 }
 
+function fmtMonths(v: number | null): string {
+  return v != null && isFinite(v) ? v.toFixed(1) + ' months' : '—';
+}
+
+// Ramp table (phase, occ, ADR, gross/mo, net/mo) — empty string when ramp off.
+function rampSection(r: AnalysisResults): string {
+  if (!r.rampEnabled || !r.rampRows.length) return '';
+  const rows = r.rampRows.map(row =>
+    `| ${row.phase} | ${fmtPct(row.occ)} | ${fmt(row.adr)} | ${fmt(row.gross)} | ${fmt(row.net)} |`
+  ).join('\n');
+  return `
+## New-Listing Ramp
+| Phase | Occ | ADR | Gross/mo | Net/mo |
+|-------|-----|-----|----------|--------|
+${rows}
+`;
+}
+
+// 2×2 payback sensitivity: rent (entered / entered − $100) × furniture
+// (entered / lean $5,500), ramped payback per cell, ✓/✗ vs the payback rule.
+function sensitivitySection(
+  inputs: AnalysisInputs,
+  ramp: RampSettings,
+): string {
+  const rents = [inputs.rentNeg, inputs.rentNeg - 100];
+  const furnitures = [inputs.furniture, 5500];
+  const cell = (rentNeg: number, furniture: number) => {
+    const res = calcAll({ ...inputs, rentNeg, furniture }, ramp);
+    const p = res.paybackRamped ?? res.payback;
+    const mark = isFinite(p) && p <= ramp.paybackRuleMonths ? '✓' : '✗';
+    return `${fmtMonths(p)} ${mark}`;
+  };
+  return `
+## Payback Sensitivity (ramped, ✓/✗ vs ${ramp.paybackRuleMonths}-month rule)
+| Rent \\ Furniture | ${fmt(furnitures[0])} (entered) | ${fmt(furnitures[1])} (lean) |
+|---|---|---|
+| ${fmt(rents[0])} (entered) | ${cell(rents[0], furnitures[0])} | ${cell(rents[0], furnitures[1])} |
+| ${fmt(rents[1])} (− $100) | ${cell(rents[1], furnitures[0])} | ${cell(rents[1], furnitures[1])} |
+`;
+}
+
 export function exportMarkdown(
   inputs: AnalysisInputs,
   r: AnalysisResults,
   meta: ExportMeta,
+  ramp?: RampSettings,
 ): void {
   const name = meta.name || 'New Analysis';
   const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-  const flagLines = meta.riskFlags.map(f => `- ${f.text}`);
+  const flagLines = meta.riskFlags.map(f => `- ${f.icon} ${f.text}`);
 
   const mdTotalCosts  = r.airbnbFee + r.fixed;
   const mdStays       = r.staysPerMonth;
@@ -91,7 +134,7 @@ export function exportMarkdown(
 | Scenario | Occ% | ADR | Net/mo | Net/yr |
 |----------|------|-----|--------|--------|
 ${r.scenarioData.map(s => `| ${s.label.charAt(0).toUpperCase() + s.label.slice(1)} | ${fmtPct(s.occ)} | ${fmt(s.adr)} | ${fmt(s.netMonthly)} | ${fmt(s.netAnnual)} |`).join('\n')}
-
+${rampSection(r)}
 ## Investment Summary
 | Item | Amount |
 |------|--------|
@@ -104,14 +147,16 @@ ${r.scenarioData.map(s => `| ${s.label.charAt(0).toUpperCase() + s.label.slice(1
 | Welcome Kits | ${fmt(inputs.welcomeKits)} |
 | Legal | ${fmt(inputs.legal)} |
 | Miscellaneous | ${fmt(inputs.misc)} |
-| **Total Initial Investment** | **${fmt(r.totalInvest)}** |
+${r.rampEnabled ? `| Month-1 Carry (${r.carryBreakdown.map(c => c.label).join(', ')}) | ${fmt(r.month1Carry)} |\n` : ''}| **Total Initial Investment** | **${fmt(r.totalInvest)}** |
 
 | Metric | Value |
 |--------|-------|
-| Payback Period | ${isFinite(r.payback) ? r.payback.toFixed(1) + ' months' : '—'} |
+${r.rampEnabled && r.paybackRamped != null
+  ? `| **Payback (ramped — realistic)** | **${fmtMonths(r.paybackRamped)}** |\n| Payback (flat base case — assumes day-1 stabilization, optimistic) | ${fmtMonths(r.payback)} |`
+  : `| Payback Period | ${fmtMonths(r.payback)} |`}
 | 12-Month ROI | ${fmtPct(r.roi12)} |
 | 24-Month ROI | ${fmtPct(r.roi24)} |
-
+${ramp && r.rampEnabled ? sensitivitySection(inputs, ramp) : ''}
 ## Risk Assessment
 ${flagLines.length ? flagLines.join('\n') : 'No risk flags triggered.'}
 

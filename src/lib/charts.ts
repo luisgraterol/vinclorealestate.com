@@ -1,5 +1,6 @@
 import { Chart } from 'chart.js/auto';
 import { fmtK, gaugeAngle, metricCardClass, badgeState, getMonthlyProfile } from '@lib/visualLogic';
+import { capOcc, RENT_TO_GROSS_HEALTHY_MAX, RENT_TO_GROSS_WALK } from '@lib/constants';
 import type { AnalysisInputs, AnalysisResults } from '@lib/calculations';
 
 export interface RenderContext {
@@ -76,7 +77,8 @@ export function renderVisuals(inputs: AnalysisInputs, r: AnalysisResults, ctx: R
   document.getElementById('res-subline')!.textContent =
     `${br} BR · ${ba} BA · ${type}${ctx.isHOA ? ' · HOA' : ''}`;
 
-  const bufferPP = Math.round(inputs.occ - r.breakEvenOcc);
+  const occPct = capOcc(inputs.occ);
+  const bufferPP = Math.round(occPct - r.breakEvenOcc);
   const bufEl = document.getElementById('res-buffer')!;
   bufEl.textContent = (bufferPP >= 0 ? '+' : '') + bufferPP + 'pp';
   (bufEl as HTMLElement).style.color = bufferPP >= 0 ? C.green : C.red;
@@ -101,8 +103,14 @@ export function renderVisuals(inputs: AnalysisInputs, r: AnalysisResults, ctx: R
   document.getElementById('res-roi12')!.textContent = Math.round(r.roi12) + '%';
   document.getElementById('res-roi-sub')!.textContent = 'on $' + Math.round(r.totalInvest).toLocaleString() + ' invested';
 
-  document.getElementById('res-payback')!.textContent = isFinite(r.payback) ? r.payback.toFixed(1) + ' mo' : '—';
-  document.getElementById('res-mult-sub')!.textContent = r.multiple.toFixed(2) + 'x rent/rev';
+  const fmtMo = (v: number) => isFinite(v) ? v.toFixed(1) + ' mo' : '—';
+  if (r.rampEnabled && r.paybackRamped != null) {
+    document.getElementById('res-payback')!.textContent = fmtMo(r.paybackRamped);
+    document.getElementById('res-mult-sub')!.textContent = `ramped · flat: ${fmtMo(r.payback)}`;
+  } else {
+    document.getElementById('res-payback')!.textContent = fmtMo(r.payback);
+    document.getElementById('res-mult-sub')!.textContent = r.multiple.toFixed(2) + 'x rent/rev';
+  }
 
   // 3a: Waterfall chart
   let floor = r.grossRevenue;
@@ -157,10 +165,10 @@ export function renderVisuals(inputs: AnalysisInputs, r: AnalysisResults, ctx: R
   }
 
   // 3b: Gauge
-  drawGauge(r.breakEvenOcc, inputs.occ);
+  drawGauge(r.breakEvenOcc, occPct);
   document.getElementById('gauge-legend')!.innerHTML =
     `<span class="gauge-dot" style="background:${C.red}"></span>Break-even ${Math.round(r.breakEvenOcc)}%` +
-    `&emsp;<span class="gauge-dot" style="background:${C.green}"></span>Actual ${Math.round(inputs.occ)}%`;
+    `&emsp;<span class="gauge-dot" style="background:${C.green}"></span>Actual ${Math.round(occPct)}%`;
 
   // 3c: Scenario bars
   const scData   = r.scenarioData.map(s => s.netAnnual);
@@ -185,7 +193,7 @@ export function renderVisuals(inputs: AnalysisInputs, r: AnalysisResults, ctx: R
 
   // 4: Monthly cash flow
   const airbnbRate = inputs.airbnbFeeType === '15.5%' ? 0.155 : 0.03;
-  const profile = getMonthlyProfile(ctx.driver, inputs.occ);
+  const profile = getMonthlyProfile(ctx.driver, occPct);
   const months  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const monthlyNets   = profile.occs.map(occ => occ * inputs.adr * 30 * (1 - airbnbRate) - r.fixed);
   const monthlyColors = monthlyNets.map(v => v >= 0 ? C.green : C.red);
@@ -215,9 +223,16 @@ export function renderVisuals(inputs: AnalysisInputs, r: AnalysisResults, ctx: R
     `Based on ${profile.marketType} demand profile (${ctx.driver}). ±${occRange}pp occupancy variance applied monthly. Dashed line = break-even at $0.`;
   document.getElementById('market-note')!.textContent = profile.note;
 
-  // 5: ROI curve
-  const roiPoints = Array.from({ length: 25 }, (_, i) => -r.totalInvest + i * r.netMonthly);
-  const roiLabels = Array.from({ length: 25 }, (_, i) => i % 2 === 0 ? `M${i}` : '');
+  // 5: ROI curve — ramped monthly nets when ramp mode is on, so the crossover
+  // (payback month) shifts with the ramp inputs.
+  const useRamp = r.rampEnabled && r.rampMonthlyNets.length > 0;
+  const roiPoints = useRamp
+    ? r.rampMonthlyNets.reduce(
+        (acc, net) => (acc.push(acc[acc.length - 1] + net), acc),
+        [-r.totalInvest],
+      )
+    : Array.from({ length: 25 }, (_, i) => -r.totalInvest + i * r.netMonthly);
+  const roiLabels = Array.from({ length: roiPoints.length }, (_, i) => i % 2 === 0 ? `M${i}` : '');
   if (!chartRoi) {
     const c2 = (document.getElementById('chart-roi') as HTMLCanvasElement).getContext('2d')!;
     chartRoi = new Chart(c2, {
@@ -237,7 +252,8 @@ export function renderVisuals(inputs: AnalysisInputs, r: AnalysisResults, ctx: R
     chartRoi.data.datasets[0].data = roiPoints; chartRoi.update();
   }
   document.getElementById('roi-footnote')!.textContent =
-    `Dashed line = initial investment ($${Math.round(r.totalInvest).toLocaleString()}). Crossover = payback month. Base case assumptions.`;
+    `Dashed line = initial investment ($${Math.round(r.totalInvest).toLocaleString()}). Crossover = payback month. ` +
+    (useRamp ? 'Ramped monthly nets (new-listing ramp).' : 'Base case assumptions.');
 
   // 6: P&L Statement
   const fmtAmt  = (v: number) => '$' + Math.round(Math.abs(v)).toLocaleString();
@@ -303,7 +319,30 @@ export function renderVisuals(inputs: AnalysisInputs, r: AnalysisResults, ctx: R
   setText('ii-misc',          fmtCost(inputs.misc));
   setText('ii-total',         fmtCost(r.totalInvest));
 
-  setText('ii-payback', isFinite(r.payback) ? r.payback.toFixed(1) + ' mo' : '—');
+  // Month-1 Carry (ramp mode) — auto-computed row with breakdown on hover
+  const carryRow = document.getElementById('ii-carry-row') as HTMLElement | null;
+  if (carryRow) {
+    carryRow.style.display = r.rampEnabled ? '' : 'none';
+    setText('ii-carry', fmtCost(r.month1Carry));
+    carryRow.title = r.carryBreakdown
+      .map(c => `${c.label}: $${Math.round(c.amount).toLocaleString()}`)
+      .join('\n');
+  }
+
+  if (r.rampEnabled && r.paybackRamped != null) {
+    setText('ii-payback', isFinite(r.paybackRamped) ? r.paybackRamped.toFixed(1) + ' mo' : '—');
+    setText('ii-payback-label', 'Payback (ramped — realistic)');
+    const flat = document.getElementById('ii-payback-flat') as HTMLElement | null;
+    if (flat) {
+      flat.style.display = '';
+      flat.textContent = 'flat base case: ' + (isFinite(r.payback) ? r.payback.toFixed(1) + ' mo' : '—');
+    }
+  } else {
+    setText('ii-payback', isFinite(r.payback) ? r.payback.toFixed(1) + ' mo' : '—');
+    setText('ii-payback-label', 'Payback Period');
+    const flat = document.getElementById('ii-payback-flat') as HTMLElement | null;
+    if (flat) flat.style.display = 'none';
+  }
   setText('ii-roi12',   fmtPct(r.roi12));
   setText('ii-roi24',   fmtPct(r.roi24));
 
@@ -320,7 +359,9 @@ export function renderVisuals(inputs: AnalysisInputs, r: AnalysisResults, ctx: R
     const opsW  = Math.min(Math.max(opsPct,  0), Math.max(0, 100 - rentW));
     const netW  = Math.max(0, 100 - rentW - opsW);
 
-    const rentColor = rentPct <= 33 ? '#1D9E75' : rentPct <= 45 ? '#d4a32a' : '#b32020';
+    const rentHealthyMax = RENT_TO_GROSS_HEALTHY_MAX * 100;
+    const rentWalk = RENT_TO_GROSS_WALK * 100;
+    const rentColor = rentPct <= rentHealthyMax ? '#1D9E75' : rentPct <= rentWalk ? '#d4a32a' : '#b32020';
     const opsColor  = opsPct  <= 33 ? '#1D9E75' : opsPct  <= 40 ? '#d4a32a' : '#b32020';
     const netColor  = netPct  >= 33 ? '#1D9E75' : netPct  >= 20 ? '#d4a32a' : '#b32020';
 
@@ -356,10 +397,10 @@ export function renderVisuals(inputs: AnalysisInputs, r: AnalysisResults, ctx: R
     const verdictEl = document.getElementById('rule-verdict');
     if (verdictEl) {
       verdictEl.classList.remove('rule-verdict--healthy', 'rule-verdict--marginal', 'rule-verdict--walkaway');
-      if (rentPct < 33) {
+      if (rentPct <= rentHealthyMax) {
         verdictEl.textContent = 'Healthy';
         verdictEl.classList.add('rule-verdict--healthy');
-      } else if (rentPct <= 45) {
+      } else if (rentPct <= rentWalk) {
         verdictEl.textContent = 'Marginal';
         verdictEl.classList.add('rule-verdict--marginal');
       } else {
