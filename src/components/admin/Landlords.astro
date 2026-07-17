@@ -45,6 +45,7 @@
       <select id="f-type">
         <option value="">— Select type —</option>
         <option>Property Management Company</option>
+        <option>Property Owner</option>
         <option>Individual Investor's LLC</option>
         <option>Small Local RE Company</option>
         <option>Regional Portfolio Operator</option>
@@ -56,12 +57,12 @@
     </div>
     <div class="field-row">
       <div class="field-group">
-        <label for="f-phone">Phone <span class="req">*</span></label>
-        <input type="text" id="f-phone" placeholder="(555) 000-0000" />
+        <label for="f-phone">Phone</label>
+        <input type="text" id="f-phone" placeholder="(555) 000-0000 (optional)" />
       </div>
       <div class="field-group">
-        <label for="f-email">Email <span class="req">*</span></label>
-        <input type="email" id="f-email" placeholder="contact@example.com" />
+        <label for="f-email">Email</label>
+        <input type="email" id="f-email" placeholder="contact@example.com (optional)" />
       </div>
     </div>
     <div class="field-group">
@@ -160,8 +161,8 @@
                     ${l.website ? `<div class="landlord-website"><a href="${esc(l.website)}" target="_blank" rel="noopener noreferrer">${esc(l.website.replace(/^https?:\/\//, ''))}</a></div>` : ''}
                   </td>
                   <td><span class="type-badge">${esc(truncateType(l.type))}</span></td>
-                  <td class="muted-cell"><a href="mailto:${esc(l.email)}" class="contact-link">${esc(l.email)}</a></td>
-                  <td class="muted-cell"><a href="tel:${esc(l.phone)}" class="contact-link">${esc(l.phone)}</a></td>
+                  <td class="muted-cell">${l.email ? `<a href="mailto:${esc(l.email)}" class="contact-link">${esc(l.email)}</a>` : '<span class="dash">—</span>'}</td>
+                  <td class="muted-cell">${l.phone ? `<a href="tel:${esc(l.phone)}" class="contact-link">${esc(l.phone)}</a>` : '<span class="dash">—</span>'}</td>
                   <td class="num-col">
                     ${count > 0
                       ? `<a href="/admin/properties" class="count-link">${count}</a>`
@@ -252,8 +253,8 @@
     const notes   = (document.getElementById('f-notes')   as HTMLTextAreaElement).value.trim();
     const errorEl = document.getElementById('form-error')!;
 
-    if (!name || !type || !phone || !email) {
-      errorEl.textContent   = 'Name, type, phone, and email are required.';
+    if (!name || !type) {
+      errorEl.textContent   = 'Name and type are required.';
       errorEl.style.display = '';
       return;
     }
@@ -266,8 +267,8 @@
     const payload = {
       name,
       type,
-      phone,
-      email,
+      phone:   phone   || null,
+      email:   email   || null,
       website: website || null,
       notes:   notes   || null,
     };

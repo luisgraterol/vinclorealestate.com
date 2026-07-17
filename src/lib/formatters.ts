@@ -21,6 +21,12 @@ export function fmtX(n: number | null | undefined): string {
   return n.toFixed(2) + 'x';
 }
 
+export function fmtBedrooms(v: string | null | undefined): string {
+  if (!v) return '—';
+  if (v === '0') return 'Studio';
+  return `${v} BR`;
+}
+
 export function colorClass(
   val: number,
   opts: { greenAbove?: number; redBelow?: number } = {},
