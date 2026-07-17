@@ -75,7 +75,7 @@ export function exportMarkdown(
 
 ## Property Details
 - Address: ${meta.address || 'N/A'}
-- Bedrooms: ${meta.bedrooms} | Bathrooms: ${meta.bathrooms}
+- Bedrooms: ${meta.bedrooms === '0' ? 'Studio' : meta.bedrooms} | Bathrooms: ${meta.bathrooms}
 - Property Type: ${meta.propertyType}
 - Negotiated Rent: ${fmt(inputs.rentNeg)}
 

@@ -1,5 +1,6 @@
 import { Chart } from 'chart.js/auto';
 import { fmtK, gaugeAngle, metricCardClass, badgeState, getMonthlyProfile, monthWindow } from '@lib/visualLogic';
+import { fmtBedrooms } from '@lib/formatters';
 import { capOcc, OCC_CAP, RENT_TO_GROSS_HEALTHY_MAX, RENT_TO_GROSS_WALK } from '@lib/constants';
 import { expandRampFactors } from '@lib/calculations';
 import type { AnalysisInputs, AnalysisResults, RampSettings } from '@lib/calculations';
@@ -75,9 +76,9 @@ export function renderVisuals(inputs: AnalysisInputs, r: AnalysisResults, ctx: R
   // 1: Property header
   const prop = ctx.propertiesList.find(p => p.id === ctx.selectedPropertyId);
   document.getElementById('res-address')!.textContent = prop?.address_line1 || ctx.address || '—';
-  const br = ctx.bedrooms || '—', ba = ctx.bathrooms || '—', type = ctx.propertyType || '—';
+  const br = fmtBedrooms(ctx.bedrooms), ba = ctx.bathrooms || '—', type = ctx.propertyType || '—';
   document.getElementById('res-subline')!.textContent =
-    `${br} BR · ${ba} BA · ${type}${ctx.isHOA ? ' · HOA' : ''}`;
+    `${br} · ${ba} BA · ${type}${ctx.isHOA ? ' · HOA' : ''}`;
 
   const occPct = capOcc(inputs.occ);
   const bufferPP = Math.round(occPct - r.breakEvenOcc);
