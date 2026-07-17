@@ -4,10 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        navy: {
-          DEFAULT: '#0f1f2e',
-          mid: '#1a2f44',
-          light: '#243a52',
+        cypress: {
+          DEFAULT: '#254a34',
+          mid: '#2f5a40',
+          light: '#3d6d4f',
         },
         gold: {
           DEFAULT: '#c9a96e',
