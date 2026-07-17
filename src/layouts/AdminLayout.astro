@@ -103,21 +103,21 @@ const {
     position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
     display: flex; flex-direction: column;
     background: #ffffff;
-    border-right: 1px solid rgba(15,31,46,.1);
+    border-right: 1px solid rgba(19,41,32,.1);
     transition: transform .25s ease;
   }
 
-  .sidebar-brand { padding: 22px 20px 18px; border-bottom: 1px solid rgba(15,31,46,.06); }
+  .sidebar-brand { padding: 22px 20px 18px; border-bottom: 1px solid rgba(19,41,32,.06); }
   .brand-link { text-decoration: none; display: flex; align-items: baseline; gap: 8px; }
   .brand-rl {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 1.3rem; font-weight: 500; color: #0f1f2e; letter-spacing: .02em;
+    font-size: 1.3rem; font-weight: 500; color: #132920; letter-spacing: .02em;
   }
   .brand-amp { color: #c9a96e; }
   .brand-name {
     font-family: 'DM Sans', system-ui, sans-serif;
     font-size: .6rem; font-weight: 400; letter-spacing: .16em;
-    text-transform: uppercase; color: rgba(15,31,46,.60);
+    text-transform: uppercase; color: rgba(19,41,32,.60);
   }
 
   .sidebar-nav { flex: 1; padding: 14px 10px; display: flex; flex-direction: column; gap: 1px; overflow-y: auto; }
@@ -126,34 +126,34 @@ const {
     padding: 10px 12px; border-radius: 3px;
     font-family: 'DM Sans', system-ui, sans-serif;
     font-size: .78rem; font-weight: 400; letter-spacing: .02em;
-    color: rgba(15,31,46,.72); text-decoration: none;
+    color: rgba(19,41,32,.72); text-decoration: none;
     transition: color .18s, background .18s;
   }
   .nav-item svg {
     width: 15px; height: 15px; stroke: currentColor; fill: none;
     stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
   }
-  .nav-item:hover { color: #0f1f2e; background: rgba(15,31,46,.04); }
+  .nav-item:hover { color: #132920; background: rgba(19,41,32,.04); }
   .nav-item.active {
     color: #a8885a; background: rgba(201,169,110,.08);
     font-weight: 500; border-left: 2px solid #c9a96e; padding-left: 10px;
   }
   .nav-item.active svg { stroke: #a8885a; }
 
-  .sidebar-footer { padding: 14px 20px 20px; border-top: 1px solid rgba(15,31,46,.06); }
+  .sidebar-footer { padding: 14px 20px 20px; border-top: 1px solid rgba(19,41,32,.06); }
   .sidebar-email {
-    font-size: .67rem; color: rgba(15,31,46,.38); letter-spacing: .04em;
+    font-size: .67rem; color: rgba(19,41,32,.38); letter-spacing: .04em;
     margin-bottom: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     min-height: 16px;
   }
   .btn-signout {
     display: inline-flex; align-items: center; justify-content: center; gap: 7px; width: 100%;
-    padding: 8px 14px; border: 1px solid rgba(15,31,46,.18); border-radius: 2px;
+    padding: 8px 14px; border: 1px solid rgba(19,41,32,.18); border-radius: 2px;
     font-family: 'DM Sans', system-ui, sans-serif; font-size: .68rem; font-weight: 400;
-    letter-spacing: .1em; text-transform: uppercase; color: rgba(15,31,46,.5);
+    letter-spacing: .1em; text-transform: uppercase; color: rgba(19,41,32,.5);
     background: none; cursor: pointer; transition: border-color .2s, color .2s, background .2s;
   }
-  .btn-signout:hover { border-color: #0f1f2e; background: #0f1f2e; color: #fff; }
+  .btn-signout:hover { border-color: #132920; background: #132920; color: #fff; }
   .btn-signout svg {
     width: 12px; height: 12px; stroke: currentColor; fill: none;
     stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
@@ -166,25 +166,25 @@ const {
   .mobile-bar {
     display: none; align-items: center; gap: 14px;
     padding: 0 20px; height: 52px;
-    background: #ffffff; border-bottom: 1px solid rgba(15,31,46,.1);
+    background: #ffffff; border-bottom: 1px solid rgba(19,41,32,.1);
     position: sticky; top: 0; z-index: 50; flex-shrink: 0;
   }
   .hamburger {
     background: none; border: none; cursor: pointer; padding: 5px;
-    color: #0f1f2e; display: flex; align-items: center;
+    color: #132920; display: flex; align-items: center;
   }
   .hamburger svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; }
-  .mobile-brand { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.1rem; color: #0f1f2e; }
+  .mobile-brand { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.1rem; color: #132920; }
   .mobile-brand span { color: #c9a96e; }
 
   /* ── Overlay ──────────────────────────────────────────────────── */
-  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(15,31,46,.3); z-index: 99; }
+  .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(19,41,32,.3); z-index: 99; }
   .sidebar-overlay.visible { display: block; }
 
   /* ── Responsive ───────────────────────────────────────────────── */
   @media (max-width: 768px) {
     .sidebar { transform: translateX(-100%); box-shadow: none; }
-    .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(15,31,46,.12); }
+    .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(19,41,32,.12); }
     .admin-main { margin-left: 0; }
     .mobile-bar { display: flex; }
   }

@@ -62,7 +62,7 @@ export function drawGauge(breakEvenPct: number, actualPct: number): void {
   }
   const midY = cy - r * 0.46;
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#0f1f2e';
+  ctx.fillStyle = '#132920';
   ctx.font = 'bold 22px "DM Sans", system-ui'; ctx.textBaseline = 'middle';
   ctx.fillText(Math.round(actualPct) + '%', cx, midY);
   ctx.fillStyle = '#7a6e65';
