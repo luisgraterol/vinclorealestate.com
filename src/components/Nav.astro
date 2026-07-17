@@ -45,7 +45,7 @@ const { variant = 'public' } = Astro.props;
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 5vw; height: 68px;
-    background: rgba(19,41,32,.97); backdrop-filter: blur(12px);
+    background: rgba(26,51,39,.97); backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(201,169,110,.18);
     transition: .35s cubic-bezier(.4,0,.2,1);
   }
@@ -75,7 +75,7 @@ const { variant = 'public' } = Astro.props;
     font-size: .72rem !important; letter-spacing: .12em !important;
     color: #c9a96e !important; transition: background .35s, color .35s !important;
   }
-  .nav-cta:hover { background: #c9a96e !important; color: #132920 !important; }
+  .nav-cta:hover { background: #c9a96e !important; color: #1a3327 !important; }
   .hamburger {
     display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
   }
@@ -88,7 +88,7 @@ const { variant = 'public' } = Astro.props;
     .nav-links.open {
       display: flex; flex-direction: column; position: fixed;
       top: 68px; left: 0; right: 0;
-      background: rgba(19,41,32,.98); padding: 28px 5vw 36px; gap: 24px;
+      background: rgba(26,51,39,.98); padding: 28px 5vw 36px; gap: 24px;
       border-bottom: 1px solid rgba(201,169,110,.18);
     }
     .nav-links.open a { font-size: 1rem; letter-spacing: .08em; }

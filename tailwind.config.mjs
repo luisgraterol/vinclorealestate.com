@@ -5,9 +5,9 @@ export default {
     extend: {
       colors: {
         cypress: {
-          DEFAULT: '#132920',
-          mid: '#1d3a2c',
-          light: '#2b4d3b',
+          DEFAULT: '#1a3327',
+          mid: '#23432f',
+          light: '#305943',
         },
         gold: {
           DEFAULT: '#c9a96e',
