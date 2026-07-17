@@ -21,7 +21,7 @@ const FAKE_SESSION  = {
   token_type:    'bearer',
   user: {
     id:    'test-user-id',
-    email: 'test@rlcapitalrealty.com',
+    email: 'test@vinclorealestate.com',
     role:  'authenticated',
     aud:   'authenticated',
     app_metadata:  { provider: 'email' },

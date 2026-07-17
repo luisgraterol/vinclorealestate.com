@@ -1,4 +1,4 @@
-# R&L Capital Realty — Product Brief
+# Vinclo Real Estate — Product Brief
 
 ## Register
 
@@ -6,7 +6,7 @@ brand
 
 ## What We Do
 
-R&L Capital Realty LLC is a Texas-based short-term rental (STR) arbitrage business. We lease residential properties, furnish them, and operate them as short-term rentals on platforms like Airbnb. We do not own the properties — we negotiate with landlords for master lease agreements and capture the spread between our rent cost and STR revenue.
+Vinclo Real Estate is a Texas-based short-term rental (STR) arbitrage business. We lease residential properties, furnish them, and operate them as short-term rentals on platforms like Airbnb. We do not own the properties — we negotiate with landlords for master lease agreements and capture the spread between our rent cost and STR revenue.
 
 Current market focus: **Abilene, TX** — driven by Dyess AFB military demand, Hardin-Simmons and ACU university traffic, and corporate/healthcare travelers.
 
@@ -61,7 +61,7 @@ Marketing homepage. Converts two types of visitors:
 2. **Landlords** → understand the master lease model, trust us with their property
 
 ### Admin Portal (`/admin`)
-Internal tool for R&L Capital operators. Password-protected.
+Internal tool for Vinclo operators. Password-protected.
 - **Property Financial Calculator** — evaluate STR arbitrage opportunities: input property details, revenue assumptions, costs → get P&L, ROI, break-even, risk flags
 - **Save & compare analyses** — persist to Supabase, compare multiple properties side-by-side
 - **Export to Markdown** — shareable analysis reports

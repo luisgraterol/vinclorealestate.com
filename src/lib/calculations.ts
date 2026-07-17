@@ -424,7 +424,7 @@ export function getRiskFlags(
     flags.push({ type: 'warn', icon: '⚠️', text: 'Revenue multiple below 1.8x. Arbitrage margin is thin — renegotiate rent or pass.' });
   }
   if (inputs.rentNeg > 1750) {
-    flags.push({ type: 'warn', icon: '⚠️', text: 'Rent exceeds R&L walk-away threshold of $1,750/mo for Abilene 3BR.' });
+    flags.push({ type: 'warn', icon: '⚠️', text: 'Rent exceeds Vinclo walk-away threshold of $1,750/mo for Abilene 3BR.' });
   }
   if (inputs.avgStay > 0 && inputs.avgStay < 2) {
     flags.push({ type: 'warn', icon: '⚠️', text: 'Very short avg stay increases cleaning coordination load significantly.' });

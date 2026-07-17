@@ -1,5 +1,5 @@
 ---
-name: R&L Capital Realty
+name: Vinclo Real Estate
 description: Premium furnished short-term housing for military, corporate, and university guests in Abilene, TX
 colors:
   navy: "#0f1f2e"
@@ -92,13 +92,13 @@ components:
     textColor: "{colors.navy}"
 ---
 
-# Design System: R&L Capital Realty
+# Design System: Vinclo Real Estate
 
 ## 1. Overview
 
 **Creative North Star: "The Garrison Estate"**
 
-R&L Capital Realty occupies a specific intersection: the measured confidence of a military command structure and the quiet prestige of a well-run estate. The system speaks to people who have been sent somewhere on someone else's schedule, or who are deciding whether to trust a stranger with their property. Neither audience tolerates decoration that pretends to be function. The design earns trust by looking like it was made by someone who does not need to impress you.
+Vinclo Real Estate occupies a specific intersection: the measured confidence of a military command structure and the quiet prestige of a well-run estate. The system speaks to people who have been sent somewhere on someone else's schedule, or who are deciding whether to trust a stranger with their property. Neither audience tolerates decoration that pretends to be function. The design earns trust by looking like it was made by someone who does not need to impress you.
 
 The palette is dark-anchored and gold-accented: a near-black deep navy as the primary structural color, a warm burnished gold as the sole emphasis voice, and an off-white cream as the light surface. These three colors have clear jobs and do not cross over. The typography pairs a weight-light display serif (Cormorant Garamond) for headings and italic emphasis with a clean geometric sans (DM Sans) for all functional text: labels, body, navigation, buttons. Motion is purposeful and entrance-focused, not choreographic.
 
