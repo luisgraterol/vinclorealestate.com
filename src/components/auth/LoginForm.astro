@@ -164,7 +164,7 @@
 </script>
 
 <style>
-  body { font-family: 'DM Sans', system-ui, sans-serif; background: #1a3327; color: #3d3530; font-size: 16px; line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+  body { font-family: 'DM Sans', system-ui, sans-serif; background: #254a34; color: #3d3530; font-size: 16px; line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
   .page-bg { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
   .page-bg::before { content: ''; position: absolute; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(201,169,110,.06) 0%, transparent 70%); top: -200px; right: -200px; }
   .page-bg::after { content: ''; position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(201,169,110,.04) 0%, transparent 70%); bottom: -150px; left: -100px; }
@@ -182,23 +182,23 @@
   .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #a8885a, #c9a96e, #a8885a); }
   .card-eyebrow { font-family: 'DM Sans', system-ui, sans-serif; font-size: .65rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: #a8885a; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
   .card-eyebrow::before { content: ''; display: block; width: 22px; height: 1px; background: #a8885a; }
-  .card-title { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 2rem; color: #1a3327; line-height: 1.15; margin-bottom: 32px; letter-spacing: -.01em; }
+  .card-title { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 2rem; color: #254a34; line-height: 1.15; margin-bottom: 32px; letter-spacing: -.01em; }
   .card-title em { font-style: italic; color: #a8885a; }
   .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
   .form-label { font-size: .72rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: #7a6e65; }
-  .form-input { width: 100%; padding: 12px 14px; border: 1px solid rgba(26,51,39,.15); border-radius: 2px; font-family: 'DM Sans', system-ui, sans-serif; font-size: .95rem; color: #1a3327; background: white; outline: none; transition: border-color .35s, box-shadow .35s; }
+  .form-input { width: 100%; padding: 12px 14px; border: 1px solid rgba(37,74,52,.15); border-radius: 2px; font-family: 'DM Sans', system-ui, sans-serif; font-size: .95rem; color: #254a34; background: white; outline: none; transition: border-color .35s, box-shadow .35s; }
   .form-input:focus { outline: none; border-color: #c9a96e; box-shadow: 0 0 0 3px rgba(201,169,110,.22); }
   .form-input:focus-visible { border-color: #c9a96e; box-shadow: 0 0 0 3px rgba(201,169,110,.22); }
   .form-input::placeholder { color: #8a7e78; }
   .input-wrap { position: relative; }
   .input-wrap .form-input { padding-right: 42px; }
   .toggle-pw { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; padding: 4px; cursor: pointer; color: #7a6e65; line-height: 0; transition: color .35s; }
-  .toggle-pw:hover { color: #1a3327; }
+  .toggle-pw:hover { color: #254a34; }
   .toggle-pw .eye-off { display: none; }
   .toggle-pw.shown .eye-on { display: none; }
   .toggle-pw.shown .eye-off { display: block; }
-  .btn-submit { width: 100%; padding: 13px 24px; background: #1a3327; color: #faf8f4; font-family: 'DM Sans', system-ui, sans-serif; font-size: .78rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; border: none; border-radius: 2px; cursor: pointer; transition: background .35s, transform .35s, box-shadow .35s; position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; }
-  .btn-submit:hover:not(:disabled) { background: #305943; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(26,51,39,.3); }
+  .btn-submit { width: 100%; padding: 13px 24px; background: #254a34; color: #faf8f4; font-family: 'DM Sans', system-ui, sans-serif; font-size: .78rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; border: none; border-radius: 2px; cursor: pointer; transition: background .35s, transform .35s, box-shadow .35s; position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; }
+  .btn-submit:hover:not(:disabled) { background: #3d6d4f; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(37,74,52,.3); }
   .btn-submit:disabled { opacity: .6; cursor: not-allowed; }
   .btn-spinner { width: 14px; height: 14px; border: 2px solid rgba(250,248,244,.3); border-top-color: #faf8f4; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
   .btn-submit.loading .btn-spinner { display: block; }
