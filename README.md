@@ -1,6 +1,6 @@
-# rlcapitalrealty.com
+# vinclorealestate.com
 
-Static site for **R&L Capital Realty LLC** — a Texas-based short-term rental arbitrage business. Deployed on Vercel with Supabase for auth and data persistence.
+Static site for **Vinclo Real Estate** — a Texas-based short-term rental arbitrage business. Deployed on Vercel with Supabase for auth and data persistence.
 
 ## Stack
 
@@ -45,7 +45,7 @@ Run `migrations/001_property_analyses.sql` in the Supabase SQL editor to create 
 | ADR (2BR) | $167/night | AirDNA 2026 |
 | Occupancy | 77% | AirDNA Abilene annual avg |
 | Avg stay | 3.2 nights | Military TDY / university profile |
-| Rent target | $1,200/mo (negotiated) | R&L Capital operating range |
-| Walk-away rent | $1,750/mo | R&L Capital policy |
+| Rent target | $1,200/mo (negotiated) | Vinclo operating range |
+| Walk-away rent | $1,750/mo | Vinclo policy |
 | STR permit | None required | City of Abilene, 2026 |
 | HOT tax | Collected by Airbnb | No operator action required |

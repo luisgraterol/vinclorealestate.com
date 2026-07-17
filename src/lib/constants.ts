@@ -6,7 +6,7 @@
 export const RENT_TO_GROSS_HEALTHY_MAX = 0.33;
 export const RENT_TO_GROSS_WALK = 0.45;
 
-// R&L payback rule: ramped payback beyond this many months fails the deal.
+// Vinclo payback rule: ramped payback beyond this many months fails the deal.
 // Default only — editable per analysis in the calculator settings.
 export const PAYBACK_RULE_MONTHS = 9;
 

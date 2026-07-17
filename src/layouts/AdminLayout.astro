@@ -7,7 +7,7 @@ interface Props {
 }
 
 const {
-  title = 'Owner Portal — R&L Capital Realty LLC',
+  title = 'Owner Portal — Vinclo Real Estate',
   activePage = 'analyzer',
 } = Astro.props;
 ---
@@ -20,8 +20,8 @@ const {
 
       <div class="sidebar-brand">
         <a href="/admin/analyzer" class="brand-link">
-          <span class="brand-rl">R<span class="brand-amp">&</span>L</span>
-          <span class="brand-name">Capital Realty</span>
+          <span class="brand-rl">Vinclo</span>
+          <span class="brand-name">Real Estate</span>
         </a>
       </div>
 
@@ -62,7 +62,7 @@ const {
         <button class="hamburger" id="sidebar-toggle" aria-label="Toggle navigation">
           <svg viewBox="0 0 24 24"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
         </button>
-        <span class="mobile-brand">R<span>&</span>L Capital</span>
+        <span class="mobile-brand">Vinclo <span>Real Estate</span></span>
       </div>
 
       <slot />

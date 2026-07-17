@@ -71,7 +71,7 @@ export function exportMarkdown(
   const lawnVal = inputs.hasYard ? inputs.lawnCare : 0;
 
   const md = `# Property Analysis — ${name}
-**R&L Capital Realty LLC** | Abilene, TX | Generated: ${date}
+**Vinclo Real Estate** | Abilene, TX | Generated: ${date}
 
 ## Property Details
 - Address: ${meta.address || 'N/A'}
