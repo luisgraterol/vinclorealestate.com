@@ -6,31 +6,34 @@ brand
 
 ## What We Do
 
-Vinclo Real Estate is a Texas-based short-term rental (STR) arbitrage business. We lease residential properties, furnish them, and operate them as short-term rentals on platforms like Airbnb. We do not own the properties — we negotiate with landlords for master lease agreements and capture the spread between our rent cost and STR revenue.
+Vinclo Real Estate is a US-based short-term rental (STR) company built on **two complementary business lines** under one parent brand (full strategy in `cohosting.md`):
 
-Current market focus: **Abilene, TX** — driven by Dyess AFB military demand, Hardin-Simmons and ACU university traffic, and corporate/healthcare travelers.
+- **Vinclo Management (Line A — co-hosting / third-party management).** We manage other owners' properties as short-term rentals. We don't own them; the owner keeps the asset and income, and Vinclo runs the operation for a commission (~20% of booking revenue). Core message: *You own the property. We handle the hosting.* Owner-facing (B2B).
+- **Vinclo Arbitrage (Line B — STR rental arbitrage).** We lease units directly from landlords, furnish them, and operate them ourselves as short-term rentals, capturing the spread. Landlord-facing (B2B) plus the guest-facing operation of those units.
+
+The two lines reinforce each other: arbitrage builds operating experience and case studies that make the management pitch credible; landlord and owner relationships cross-feed both lines; both share one operational backbone (guest comms, pricing, cleaning, reporting).
+
+Markets: **Management** experience across Miami & Nashville; **Arbitrage** currently active in **Abilene, TX** (Dyess AFB, Hardin-Simmons/ACU/McMurry, corporate/healthcare demand). Positioned as multi-market / national, not limited to one city.
 
 ## Primary Audiences
 
-### 1. Military & Government Personnel
-- TDY travelers, PCS movers, contractors
-- Need: clean, furnished, flexible-stay housing near Dyess AFB
-- Tone: reliable, no-nonsense, military-friendly
+### 1. Property Owners (Vinclo Management — B2B, primary)
+- Owners with an STR (or a property that could be one) who don't want to manage it themselves
+- Need: more income, less work, protection of the asset
+- Tone: professional, data-driven, "personal attention backed by professional systems"
+- CTA: *Find out what your property could earn* / *Free property consultation*
 
-### 2. Corporate & Healthcare Travelers
-- Extended-stay professionals, locum tenens healthcare workers
-- Need: home-like amenities, fast WiFi, workspace, monthly pricing
-- Tone: professional, convenient, cost-effective vs. hotels
+### 2. Landlords (Vinclo Arbitrage — B2B)
+- Landlords open to leasing a unit to a company rather than an individual tenant
+- Need: consistent rent, reliable professional operator, clean legal framework
+- Tone: reliability-first, business-partner framing
+- CTA: *Lease your unit to Vinclo*
 
-### 3. University Visitors
-- Parents, visiting faculty, prospective students (Hardin-Simmons, ACU, McMurry)
-- Need: affordable, central, short-stay options
-- Tone: welcoming, local knowledge, great value
-
-### 4. Property Owners / Landlords (B2B)
-- Landlords considering a master lease arrangement
-- Need: reliable long-term tenant, no management headaches, consistent rent
-- Tone: professional, trustworthy, business-partner framing
+### 3. Guests (operating side / proof)
+- Military & government (TDY, PCS, contractors near Dyess AFB), corporate & healthcare travelers, university visitors
+- Need: clean, furnished, flexible-stay housing
+- Serves as credibility/proof for both B2B lines
+- CTA: *Browse our properties* / *Book on Airbnb*
 
 ## Brand Voice
 
@@ -55,10 +58,14 @@ Current market focus: **Abilene, TX** — driven by Dyess AFB military demand, H
 
 ## Product Scope
 
-### Public Site (`/`)
-Marketing homepage. Converts two types of visitors:
-1. **Travelers** → understand our properties, check availability, contact us
-2. **Landlords** → understand the master lease model, trust us with their property
+### Public Site
+Hub-and-spoke marketing site presenting both business lines with separate, audience-specific CTAs:
+- **`/` (home)** → dual value prop, the two business lines, proof/stats, property teaser, reviews, why-Vinclo, contact
+- **`/management`** → owners: services, how-it-works, aligned pricing, free consultation CTA
+- **`/arbitrage`** → landlords: guaranteed-rent benefits, how leasing works, market/deal discipline, "lease your unit" CTA
+- **`/stays`** → guests: furnished-property showcase, who-stays-with-us, reviews, "book on Airbnb"
+
+Shared UI lives in `components/` (Nav, Footer, ContactSection, BusinessLines, StatsBand, PropertyGrid, Reviews, FeatureCards, ServiceGrid, Steps, icons). Copy/data lives in `lib/content/` (services, stats, properties, reviews, site). Real stats/reviews/listings are user-populated — placeholder entries are hidden from the live site automatically.
 
 ### Admin Portal (`/admin`)
 Internal tool for Vinclo operators. Password-protected.

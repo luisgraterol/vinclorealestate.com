@@ -1,11 +1,20 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import styles from './Nav.module.css';
 
 interface NavProps {
   variant?: 'public' | 'auth';
 }
+
+const LINKS = [
+  { href: '/management', label: 'Management' },
+  { href: '/arbitrage', label: 'Arbitrage' },
+  { href: '/stays', label: 'Stays' },
+  { href: '/#why', label: 'Why Vinclo' },
+  { href: '/auth/login', label: 'Login' },
+];
 
 export default function Nav({ variant = 'public' }: NavProps) {
   const [open, setOpen] = useState(false);
@@ -22,19 +31,22 @@ export default function Nav({ variant = 'public' }: NavProps) {
 
   return (
     <nav id="site-nav" ref={navRef} className={styles.nav}>
-      <a href="/#hero" className={styles.wordmark}>
+      <Link href="/" className={styles.wordmark}>
         <span>
           Vinclo <span className={styles.wordmarkAccent}>Real Estate</span>
         </span>
-      </a>
+      </Link>
       {variant === 'public' && (
         <>
           <ul className={`${styles.navLinks} ${open ? styles.open : ''}`}>
-            <li><a href="/#audience" onClick={() => setOpen(false)}>Guests</a></li>
-            <li><a href="/#landlords" onClick={() => setOpen(false)}>Landlords</a></li>
-            <li><a href="/#trust" onClick={() => setOpen(false)}>Why Us</a></li>
-            <li><a href="/auth/login" onClick={() => setOpen(false)}>Login</a></li>
-            <li><a href="/#contact" className={styles.navCta} onClick={() => setOpen(false)}>Contact</a></li>
+            {LINKS.map(l => (
+              <li key={l.href}>
+                <Link href={l.href} onClick={() => setOpen(false)}>{l.label}</Link>
+              </li>
+            ))}
+            <li>
+              <Link href="/#contact" className={styles.navCta} onClick={() => setOpen(false)}>Contact</Link>
+            </li>
           </ul>
           <div
             className={styles.hamburger}

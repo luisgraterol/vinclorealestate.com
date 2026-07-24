@@ -1,0 +1,31 @@
+.grid { display: grid; gap: 2px; max-width: 1200px; margin: 0 auto; }
+.cols2 { grid-template-columns: 1fr 1fr; }
+.cols3 { grid-template-columns: repeat(3, 1fr); }
+.cols4 { grid-template-columns: repeat(4, 1fr); }
+
+.card {
+  background: white; border: 1px solid rgba(37,74,52,.08); padding: 36px 30px;
+  position: relative; overflow: hidden; transition: border-color .35s, box-shadow .35s, transform .35s;
+}
+.card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: #c9a96e; transform: scaleX(0); transform-origin: left; transition: transform .35s; }
+.card:hover { border-color: rgba(201,169,110,.3); box-shadow: 0 10px 36px rgba(37,74,52,.08); transform: translateY(-3px); }
+.card:hover::after { transform: scaleX(1); }
+.iconWrap { width: 44px; height: 44px; border: 1px solid rgba(201,169,110,.28); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+.iconWrap svg { width: 20px; height: 20px; color: #a8885a; }
+.title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.25rem; font-weight: 500; color: #254a34; margin-bottom: 10px; letter-spacing: -.01em; }
+.desc { font-size: .9rem; color: #7a6e65; line-height: 1.7; font-weight: 300; text-wrap: pretty; }
+
+/* Dark variant (cypress background) */
+.dark .card { background: rgba(250,248,244,.04); border-color: rgba(201,169,110,.12); }
+.dark .card:hover { background: rgba(250,248,244,.07); border-color: rgba(201,169,110,.28); }
+.dark .iconWrap svg { color: #c9a96e; }
+.dark .title { color: #faf8f4; }
+.dark .desc { color: rgba(250,248,244,.5); }
+
+@media (max-width: 1024px) {
+  .cols4 { grid-template-columns: 1fr 1fr; }
+  .cols3 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .cols2, .cols3, .cols4 { grid-template-columns: 1fr; }
+}
