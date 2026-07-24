@@ -1,0 +1,39 @@
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; max-width: 1200px; margin: 0 auto; }
+.card {
+  position: relative; overflow: hidden; padding: 48px 44px 44px;
+  background: white; border: 1px solid rgba(37,74,52,.08);
+  display: flex; flex-direction: column;
+  transition: border-color .35s, box-shadow .35s, transform .35s;
+}
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: #c9a96e; transform: scaleX(0); transform-origin: left;
+  transition: transform .4s cubic-bezier(.4,0,.2,1);
+}
+.card:hover { border-color: rgba(201,169,110,.35); box-shadow: 0 16px 48px rgba(37,74,52,.1); transform: translateY(-4px); }
+.card:hover::before { transform: scaleX(1); }
+
+.tag { font-size: .62rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: #a8885a; margin-bottom: 22px; }
+.iconWrap {
+  width: 52px; height: 52px; border: 1px solid rgba(201,169,110,.35);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 22px;
+}
+.iconWrap svg { width: 24px; height: 24px; color: #a8885a; }
+.name { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.75rem; font-weight: 500; color: #254a34; margin-bottom: 6px; letter-spacing: -.01em; }
+.who { font-size: .72rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: #7a6e65; margin-bottom: 18px; }
+.desc { font-size: .95rem; color: #7a6e65; line-height: 1.75; font-weight: 300; margin-bottom: 26px; text-wrap: pretty; }
+.points { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+.points li { font-size: .88rem; color: #3d3530; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
+.points li::before { content: ''; width: 5px; height: 5px; background: #c9a96e; border-radius: 50%; margin-top: 8px; flex-shrink: 0; }
+.link {
+  margin-top: auto; display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'DM Sans', system-ui, sans-serif; font-size: .76rem; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase; color: #254a34; text-decoration: none;
+}
+.link span { transition: transform .35s; }
+.card:hover .link span { transform: translateX(4px); }
+
+@media (max-width: 768px) {
+  .grid { grid-template-columns: 1fr; }
+  .card { padding: 40px 28px; }
+}

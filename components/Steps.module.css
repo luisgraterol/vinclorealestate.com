@@ -1,0 +1,15 @@
+.steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; max-width: 1200px; margin: 0 auto; counter-reset: step; }
+.step { position: relative; padding: 32px 26px; background: rgba(250,248,244,.04); border: 1px solid rgba(201,169,110,.12); }
+.step:hover { border-color: rgba(201,169,110,.28); }
+.num { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 2rem; font-weight: 400; color: rgba(201,169,110,.5); line-height: 1; margin-bottom: 16px; }
+.title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.15rem; font-weight: 500; color: #faf8f4; margin-bottom: 10px; letter-spacing: -.01em; }
+.desc { font-size: .85rem; color: rgba(250,248,244,.5); line-height: 1.65; font-weight: 300; text-wrap: pretty; }
+
+/* Light variant (on cream background) */
+.light .step { background: white; border-color: rgba(37,74,52,.08); }
+.light .num { color: #c9a96e; }
+.light .title { color: #254a34; }
+.light .desc { color: #7a6e65; }
+
+@media (max-width: 1024px) { .steps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }

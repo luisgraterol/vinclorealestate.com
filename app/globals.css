@@ -13,8 +13,134 @@
     scroll-behavior: smooth;
   }
 
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: #faf8f4;
+    color: #3d3530;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    font-optical-sizing: auto;
+  }
+
   section[id] {
     scroll-margin-top: 68px;
+  }
+}
+
+/* ============================================================
+   Shared design primitives — used across all public pages
+   (colors mirror tailwind.config.mjs: cypress #254a34,
+    gold #c9a96e / #a8885a, cream #faf8f4, body #3d3530)
+   ============================================================ */
+@layer components {
+  .wrap { max-width: 1200px; margin: 0 auto; }
+  .wrap-narrow { max-width: 900px; margin: 0 auto; }
+
+  .vsection { padding: 100px 5vw; }
+  .vsection-sm { padding: 72px 5vw; }
+
+  /* Buttons */
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 12px; padding: 15px 40px;
+    background: #c9a96e; color: #254a34; border: none; cursor: pointer;
+    font-family: 'DM Sans', system-ui, sans-serif; font-size: .78rem; font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase; text-decoration: none; border-radius: 2px;
+    transition: background .35s, transform .35s, box-shadow .35s;
+  }
+  .btn-primary:hover { background: #dfc090; transform: translateY(-2px); box-shadow: 0 12px 32px rgba(201,169,110,.25); }
+
+  .btn-outline-light {
+    display: inline-flex; align-items: center; gap: 10px; padding: 15px 32px;
+    border: 1px solid rgba(201,169,110,.4); color: rgba(250,248,244,.7); background: transparent;
+    font-family: 'DM Sans', system-ui, sans-serif; font-size: .78rem; font-weight: 400;
+    letter-spacing: .12em; text-transform: uppercase; text-decoration: none; border-radius: 2px;
+    transition: border-color .35s, color .35s;
+  }
+  .btn-outline-light:hover { border-color: #c9a96e; color: #c9a96e; }
+
+  .btn-outline-dark {
+    display: inline-flex; align-items: center; gap: 10px; padding: 15px 32px;
+    border: 1px solid rgba(37,74,52,.25); color: #254a34; background: transparent;
+    font-family: 'DM Sans', system-ui, sans-serif; font-size: .78rem; font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase; text-decoration: none; border-radius: 2px;
+    transition: border-color .35s, background .35s, color .35s;
+  }
+  .btn-outline-dark:hover { border-color: #c9a96e; background: #c9a96e; color: #254a34; }
+
+  .btn-arrow { display: inline-block; transition: transform .35s; }
+  .btn-primary:hover .btn-arrow,
+  .btn-outline-light:hover .btn-arrow,
+  .btn-outline-dark:hover .btn-arrow { transform: translateX(4px); }
+
+  /* Eyebrow (centered, with flanking rules) */
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: 'DM Sans', system-ui, sans-serif; font-size: .7rem; font-weight: 400;
+    letter-spacing: .2em; text-transform: uppercase; color: #c9a96e;
+  }
+  .eyebrow::before, .eyebrow::after { content: ''; display: block; width: 36px; height: 1px; background: #a8885a; }
+
+  /* Section heading kit */
+  .section-label {
+    font-family: 'DM Sans', system-ui, sans-serif; font-size: .65rem; font-weight: 500;
+    letter-spacing: .22em; text-transform: uppercase; color: #a8885a; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::before { content: ''; display: block; width: 28px; height: 1px; background: #a8885a; }
+  .section-label.center { justify-content: center; }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400;
+    font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.15; color: #254a34;
+    letter-spacing: -.01em; margin-bottom: 16px; text-wrap: balance;
+  }
+  .section-title em { font-style: italic; color: #a8885a; }
+
+  .section-intro {
+    font-size: 1rem; color: #7a6e65; max-width: 480px; line-height: 1.75;
+    font-weight: 300; text-wrap: pretty;
+  }
+
+  /* Dark-section recolor (cypress background) */
+  .dark-section { background: #254a34; }
+  .dark-section .section-title { color: #faf8f4; }
+  .dark-section .section-title em { color: #c9a96e; }
+  .dark-section .section-intro { color: rgba(250,248,244,.5); }
+  .dark-section .section-label { color: rgba(201,169,110,.7); }
+  .dark-section .section-label::before { background: rgba(201,169,110,.5); }
+
+  /* Compact interior-page hero (shorter than the home hero) */
+  .page-hero {
+    position: relative; overflow: hidden; background: #254a34;
+    padding: 148px 5vw 80px; text-align: center;
+  }
+  .page-hero__grid {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(201,169,110,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,169,110,.035) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .page-hero__inner { position: relative; z-index: 2; max-width: 780px; margin: 0 auto; }
+  .page-hero__eyebrow { margin-bottom: 24px; }
+  .page-hero__title {
+    font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300;
+    font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.1; color: #faf8f4;
+    letter-spacing: -.01em; margin-bottom: 22px; text-wrap: balance;
+  }
+  .page-hero__title em { font-style: italic; color: #c9a96e; }
+  .page-hero__sub {
+    font-size: 1rem; color: rgba(250,248,244,.6); line-height: 1.75;
+    max-width: 560px; margin: 0 auto 36px; text-wrap: pretty;
+  }
+  .page-hero__btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  @media (max-width: 768px) {
+    .vsection { padding: 64px 5vw; }
+    .vsection-sm { padding: 52px 5vw; }
+    .page-hero { padding: 120px 5vw 64px; }
+    .page-hero__btns { flex-direction: column; align-items: center; }
   }
 }
 

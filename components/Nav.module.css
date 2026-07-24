@@ -13,7 +13,7 @@
 }
 .wordmarkAccent { color: #c9a96e; }
 .navLinks {
-  display: flex; align-items: center; gap: 32px; list-style: none;
+  display: flex; align-items: center; gap: 26px; list-style: none;
 }
 .navLinks a {
   font-family: 'DM Sans', system-ui, sans-serif; font-size: .76rem; font-weight: 400;
