@@ -3,7 +3,8 @@ node_modules/
 
 # Build output
 dist/
-.astro/
+.next/
+next-env.d.ts
 
 # Environment variables
 .env

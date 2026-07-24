@@ -1,24 +1,23 @@
 # vinclorealestate.com
 
-Static site for **Vinclo Real Estate** — a Texas-based short-term rental arbitrage business. Deployed on Vercel with Supabase for auth and data persistence.
+Site for **Vinclo Real Estate** — a Texas-based short-term rental arbitrage business. Deployed on Vercel with Supabase for auth and data persistence.
 
 ## Stack
 
-- Static HTML/CSS/JS — no frontend framework
-- Supabase (auth + database)
+- Next.js (App Router) + React
+- Supabase (auth + database), via `@supabase/ssr` with middleware-enforced session checks on `/admin/*`
+- Tailwind CSS (marketing page) + plain CSS (owner portal)
 - Vercel (hosting)
 
 ## Setup
 
-1. Copy `.env.example` to `.env` and fill in `SUPABASE_URL` and `SUPABASE_ANON_KEY`
-2. Run `node scripts/build.js` to generate `js/auth.js`
-3. Open `index.html` locally or deploy to Vercel
-
-The build script injects Supabase credentials into `js/auth.js` at build time. The generated file is gitignored.
+1. Copy `.env.example` to `.env` and fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+2. `npm install`
+3. `npm run dev` and open `http://localhost:3000`
 
 ## Calculator
 
-`admin.html` includes a **Property Financial Calculator** — an internal tool for evaluating rental arbitrage opportunities in Abilene, TX. Access requires authentication.
+`/admin/analyzer` includes a **Property Financial Calculator** — an internal tool for evaluating rental arbitrage opportunities in Abilene, TX. Access requires authentication.
 
 ### Features
 
