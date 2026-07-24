@@ -1,7 +1,5 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "framework": "astro",
+  "framework": "nextjs",
   "redirects": [
     { "source": "/admin.html", "destination": "/admin", "permanent": true },
     { "source": "/auth/login.html", "destination": "/auth/login", "permanent": true },

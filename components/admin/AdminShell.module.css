@@ -1,0 +1,92 @@
+.adminShell { display: flex; min-height: 100vh; background: #f6f5f3; }
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+.sidebar {
+  width: 224px; flex-shrink: 0;
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+  display: flex; flex-direction: column;
+  background: #ffffff;
+  border-right: 1px solid rgba(37,74,52,.1);
+  transition: transform .25s ease;
+}
+
+.sidebarBrand { padding: 22px 20px 18px; border-bottom: 1px solid rgba(37,74,52,.06); }
+.brandLink { text-decoration: none; display: flex; align-items: baseline; gap: 8px; }
+.brandRl {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.3rem; font-weight: 500; color: #254a34; letter-spacing: .02em;
+}
+.brandName {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: .6rem; font-weight: 400; letter-spacing: .16em;
+  text-transform: uppercase; color: rgba(37,74,52,.60);
+}
+
+.sidebarNav { flex: 1; padding: 14px 10px; display: flex; flex-direction: column; gap: 1px; overflow-y: auto; }
+.navItem {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 3px;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: .78rem; font-weight: 400; letter-spacing: .02em;
+  color: rgba(37,74,52,.72); text-decoration: none;
+  transition: color .18s, background .18s;
+}
+.navItem svg {
+  width: 15px; height: 15px; stroke: currentColor; fill: none;
+  stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+}
+.navItem:hover { color: #254a34; background: rgba(37,74,52,.04); }
+.navItem.active {
+  color: #a8885a; background: rgba(201,169,110,.08);
+  font-weight: 500; border-left: 2px solid #c9a96e; padding-left: 10px;
+}
+.navItem.active svg { stroke: #a8885a; }
+
+.sidebarFooter { padding: 14px 20px 20px; border-top: 1px solid rgba(37,74,52,.06); }
+.sidebarEmail {
+  font-size: .67rem; color: rgba(37,74,52,.38); letter-spacing: .04em;
+  margin-bottom: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  min-height: 16px;
+}
+.btnSignout {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px; width: 100%;
+  padding: 8px 14px; border: 1px solid rgba(37,74,52,.18); border-radius: 2px;
+  font-family: 'DM Sans', system-ui, sans-serif; font-size: .68rem; font-weight: 400;
+  letter-spacing: .1em; text-transform: uppercase; color: rgba(37,74,52,.5);
+  background: none; cursor: pointer; transition: border-color .2s, color .2s, background .2s;
+}
+.btnSignout:hover { border-color: #254a34; background: #254a34; color: #fff; }
+.btnSignout svg {
+  width: 12px; height: 12px; stroke: currentColor; fill: none;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ── Main ─────────────────────────────────────────────────────── */
+.adminMain { margin-left: 224px; flex: 1; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ── Mobile bar ───────────────────────────────────────────────── */
+.mobileBar {
+  display: none; align-items: center; gap: 14px;
+  padding: 0 20px; height: 52px;
+  background: #ffffff; border-bottom: 1px solid rgba(37,74,52,.1);
+  position: sticky; top: 0; z-index: 50; flex-shrink: 0;
+}
+.hamburger {
+  background: none; border: none; cursor: pointer; padding: 5px;
+  color: #254a34; display: flex; align-items: center;
+}
+.hamburger svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; }
+.mobileBrand { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.1rem; color: #254a34; }
+.mobileBrand span { color: #c9a96e; }
+
+/* ── Overlay ──────────────────────────────────────────────────── */
+.sidebarOverlay { display: none; position: fixed; inset: 0; background: rgba(37,74,52,.3); z-index: 99; }
+.sidebarOverlay.visible { display: block; }
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); box-shadow: none; }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(37,74,52,.12); }
+  .adminMain { margin-left: 0; }
+  .mobileBar { display: flex; }
+}

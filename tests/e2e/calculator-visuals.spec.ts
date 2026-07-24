@@ -1,8 +1,13 @@
 /**
  * E2E visual tests for the Property Analyzer results panel.
  *
- * Auth strategy: inject a fake Supabase v2 session into localStorage before
- * page load so requireAuth() short-circuits without hitting the network.
+ * Auth strategy: the dev server run by Playwright's webServer sets
+ * PLAYWRIGHT_AUTH_BYPASS=1 (see playwright.config.ts), which skips the
+ * server-side Supabase session check in proxy.ts — that check can't be
+ * satisfied from here since it runs in the Next.js server process, outside
+ * the browser context Playwright can intercept. We still seed a fake
+ * session cookie in the @supabase/ssr browser-storage format so client-side
+ * calls like supabase.auth.getSession() (e.g. the sidebar email) resolve.
  * Supabase data calls are intercepted and return empty arrays so the UI
  * reaches a runnable state without real DB data.
  */
@@ -31,10 +36,16 @@ const FAKE_SESSION  = {
 };
 
 async function mockAuth(page: Page) {
-  // Inject session before JS runs so getSession() reads it from localStorage.
-  await page.addInitScript(({ key, session }) => {
-    localStorage.setItem(key, JSON.stringify(session));
-  }, { key: STORAGE_KEY, session: FAKE_SESSION });
+  // @supabase/ssr's browser client stores the session in a cookie, base64-
+  // encoded JSON prefixed with "base64-" (not localStorage, unlike the
+  // plain @supabase/supabase-js client this replaced).
+  const cookieValue = 'base64-' + Buffer.from(JSON.stringify(FAKE_SESSION)).toString('base64');
+  await page.context().addCookies([{
+    name: STORAGE_KEY,
+    value: cookieValue,
+    domain: 'localhost',
+    path: '/',
+  }]);
 
   // Intercept Supabase REST data calls and return empty datasets.
   await page.route(`${SUPABASE_URL}/rest/v1/**`, route =>
