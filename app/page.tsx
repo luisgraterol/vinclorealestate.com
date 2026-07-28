@@ -2,34 +2,34 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
-import BusinessLines from '@/components/BusinessLines';
 import StatsBand from '@/components/StatsBand';
-import PropertyGrid from '@/components/PropertyGrid';
 import Reviews from '@/components/Reviews';
 import FeatureCards from '@/components/FeatureCards';
+import ServiceGrid from '@/components/ServiceGrid';
+import Steps from '@/components/Steps';
 import ContactSection from '@/components/ContactSection';
 import ScrollReveal from '@/components/ScrollReveal';
 import HashRedirect from '@/components/HashRedirect';
-import { TRUST_ITEMS } from '@/lib/content/services';
+import { MANAGEMENT_VALUE_PROPS, MANAGEMENT_SERVICES, MANAGEMENT_PROCESS } from '@/lib/content/services';
 import styles from './page.module.css';
 
-const TITLE = 'Vinclo Real Estate — Short-Term Rental Management & Operations';
+const TITLE = 'Vinclo Management — Short-Term Rental Property Management';
 const DESCRIPTION =
-  'Vinclo Real Estate is a professional short-term rental company built on two lines: co-hosting and management for property owners, and rental arbitrage for landlords. Miami · Nashville · Abilene, TX.';
+  'You own the property. We handle the hosting. Full-service short-term rental management and co-hosting for property owners — pricing, guests, cleaning, maintenance, and owner reporting. Miami · Nashville.';
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
   description: DESCRIPTION,
   keywords:
-    'short term rental management, Airbnb co-host, property management, STR arbitrage, vacation rental management, Airbnb management company, Abilene TX, Nashville, Miami',
+    'short term rental management, Airbnb management company, Airbnb co-host, property management for owners, vacation rental management, STR management, Nashville, Miami',
   alternates: { canonical: 'https://vinclorealestate.com/' },
   openGraph: { type: 'website', url: 'https://vinclorealestate.com/', title: TITLE, description: DESCRIPTION },
   twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
 };
 
 const MARQUEE = [
-  'Property Management', 'Co-Hosting', 'STR Arbitrage', 'Revenue Management',
-  'Guest Experience', 'Data-Driven Pricing', 'Miami', 'Nashville', 'Abilene, TX',
+  'Property Management', 'Co-Hosting', 'Revenue Management', 'Guest Experience',
+  'Data-Driven Pricing', 'Owner Reporting', 'Miami', 'Nashville',
 ];
 
 export default function HomePage() {
@@ -45,19 +45,19 @@ export default function HomePage() {
           <div className={styles.heroGeo} />
           <div className={styles.heroGeo2} />
           <div className={styles.heroContent}>
-            <div className="eyebrow" style={{ marginBottom: 28 }}>Management &amp; Arbitrage &middot; Est. 2026</div>
-            <h1 className={styles.heroHeadline}>Short-term rentals,<br />run like a <em>business</em></h1>
+            <div className="eyebrow" style={{ marginBottom: 28 }}>Vinclo Management &middot; For Property Owners</div>
+            <h1 className={styles.heroHeadline}>You own the property.<br />We handle the <em>hosting</em>.</h1>
             <p className={styles.heroSub}>
-              Two business lines, one professional operator. We co-host and manage
-              properties for owners, and lease and operate units for landlords &mdash;
-              backed by real data and hands-on hospitality.
+              Full-service short-term rental management and co-hosting. You keep the
+              asset and the income &mdash; we run the operation, from pricing and guests
+              to cleaning and reporting.
             </p>
             <div className={styles.heroBtns}>
-              <Link href="/management" className="btn-primary">For Property Owners <span className="btn-arrow">&#8594;</span></Link>
-              <Link href="/arbitrage" className="btn-outline-light">For Landlords <span className="btn-arrow">&#8594;</span></Link>
+              <Link href="#contact" className="btn-primary">Free Property Consultation <span className="btn-arrow">&#8594;</span></Link>
+              <Link href="#services" className="btn-outline-light">See Our Services <span className="btn-arrow">&#8594;</span></Link>
             </div>
             <div className={styles.heroTertiary}>
-              Looking to book a stay? <Link href="/stays">Browse our properties &#8594;</Link>
+              See how we operate. <Link href="/portfolio">View the portfolio &#8594;</Link>
             </div>
           </div>
         </section>
@@ -75,58 +75,82 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* BUSINESS LINES */}
-        <section id="business-lines" className="vsection" style={{ background: '#f2ede4' }}>
+        {/* VALUE PROPS */}
+        <section id="what-we-deliver" className="vsection" style={{ background: '#faf8f4' }}>
           <div className={`${styles.centerHeader} reveal`}>
-            <div className="section-label center">Two Business Lines</div>
-            <h2 className="section-title">One operator, <em>two ways to work with us</em></h2>
+            <div className="section-label center">What We Deliver</div>
+            <h2 className="section-title">More income, less work,<br /><em>and your asset protected</em></h2>
+          </div>
+          <FeatureCards items={MANAGEMENT_VALUE_PROPS} columns={3} />
+        </section>
+
+        {/* SERVICES */}
+        <section id="services" className="vsection" style={{ background: '#f2ede4' }}>
+          <div className={`${styles.centerHeader} reveal`}>
+            <div className="section-label center">Full-Service Management</div>
+            <h2 className="section-title">Everything your rental needs, <em>handled</em></h2>
             <p className="section-intro" style={{ margin: '0 auto' }}>
-              Whether you own a property you&apos;d rather not manage, or a unit you&apos;d
-              rather lease to a reliable operator &mdash; we have a line built for you.
+              A complete operation across six areas &mdash; from launch to day-to-day
+              hosting to owner reporting.
             </p>
           </div>
-          <BusinessLines />
+          <ServiceGrid services={MANAGEMENT_SERVICES} />
         </section>
 
         {/* STATS (renders only when real figures are set) */}
         <StatsBand />
 
-        {/* STAYS TEASER */}
-        <section id="stays-teaser" className="vsection" style={{ background: '#faf8f4' }}>
+        {/* PROCESS */}
+        <section id="how-it-works" className="vsection" style={{ background: '#faf8f4' }}>
           <div className={`${styles.centerHeader} reveal`}>
-            <div className="section-label center">Our Stays</div>
-            <h2 className="section-title">The properties <em>we operate</em></h2>
-            <p className="section-intro" style={{ margin: '0 auto' }}>
-              Every stay reflects the standard we hold across both lines &mdash; furnished,
-              professionally managed, and guest-ready.
-            </p>
+            <div className="section-label center">How It Works</div>
+            <h2 className="section-title">A clear path from <em>call to launch</em></h2>
           </div>
-          <PropertyGrid limit={3} />
-          <div className={styles.centerCta}>
-            <Link href="/stays" className="btn-outline-dark">View All Stays <span className="btn-arrow">&#8594;</span></Link>
+          <Steps steps={MANAGEMENT_PROCESS} light />
+        </section>
+
+        {/* PRICING */}
+        <section id="pricing" className={`vsection ${styles.pricing}`}>
+          <div className={styles.pricingLayout}>
+            <div className="reveal">
+              <div className="section-label">Aligned Pricing</div>
+              <h2 className="section-title">We earn when <em>you earn</em></h2>
+              <p className={styles.pricingBody}>
+                Full-service management runs at approximately{' '}
+                <strong>20% of booking revenue</strong> &mdash; our incentives are tied
+                directly to your property&apos;s performance. Rates flex by market, volume,
+                and scope, and owners with multiple properties can negotiate. A-la-carte
+                services and setup fees are available where they fit better.
+              </p>
+            </div>
+            <div className="reveal reveal-delay-1">
+              <div className={styles.exampleCard}>
+                <div className={styles.exampleLabel}>Illustrative Example</div>
+                <div className={styles.exampleRow}>
+                  <span className={styles.exampleKey}>Monthly bookings</span>
+                  <span className={styles.exampleVal}>$5,000</span>
+                </div>
+                <div className={styles.exampleRow}>
+                  <span className={styles.exampleKey}>Management fee (~20%)</span>
+                  <span className={`${styles.exampleVal} ${styles.gold}`}>$1,000</span>
+                </div>
+                <div className={styles.exampleRow}>
+                  <span className={styles.exampleKey}>You keep</span>
+                  <span className={styles.exampleVal}>$4,000</span>
+                </div>
+                <p className={styles.exampleNote}>
+                  Illustrative only &mdash; actual figures depend on your property and market.
+                  We never promise guaranteed income.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* REVIEWS (renders only when real reviews are set) */}
         <Reviews />
 
-        {/* WHY VINCLO */}
-        <section id="why" className="vsection dark-section" style={{ position: 'relative', overflow: 'hidden' }}>
-          <div className={styles.whyGrid} />
-          <div className={`${styles.centerHeader} reveal`} style={{ position: 'relative', zIndex: 1 }}>
-            <div className="section-label center">Why Vinclo</div>
-            <h2 className="section-title">Personal attention,<br /><em>backed by professional systems</em></h2>
-            <p className="section-intro" style={{ margin: '0 auto' }}>
-              We operate with the discipline of an institutional manager and the
-              responsiveness of a dedicated owner &mdash; on both lines.
-            </p>
-          </div>
-          <div style={{ position: 'relative', zIndex: 1, marginTop: 56 }}>
-            <FeatureCards items={TRUST_ITEMS} columns={4} dark />
-          </div>
-        </section>
-
-        <ContactSection variant="general" />
+        <ContactSection variant="owner" />
       </main>
 
       <Footer />

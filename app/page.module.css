@@ -28,13 +28,26 @@
 .centerHeader { text-align: center; margin-bottom: 48px; max-width: 720px; margin-left: auto; margin-right: auto; }
 .centerCta { text-align: center; margin-top: 44px; }
 
-/* WHY */
-.whyGrid { position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(201,169,110,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(201,169,110,.03) 1px, transparent 1px); background-size: 48px 48px; }
+/* PRICING */
+.pricing { background: #f2ede4; }
+.pricingLayout { display: grid; grid-template-columns: 1.1fr 1fr; gap: 60px; align-items: center; max-width: 1100px; margin: 0 auto; }
+.pricingBody { font-size: 1rem; color: #7a6e65; line-height: 1.8; font-weight: 300; }
+.pricingBody strong { color: #254a34; font-weight: 500; }
+.exampleCard { background: #254a34; padding: 40px 38px; position: relative; overflow: hidden; }
+.exampleCard::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: #c9a96e; }
+.exampleLabel { font-size: .62rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: #c9a96e; margin-bottom: 20px; }
+.exampleRow { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid rgba(201,169,110,.15); }
+.exampleRow:last-of-type { border-bottom: none; }
+.exampleKey { font-size: .85rem; color: rgba(250,248,244,.6); }
+.exampleVal { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.5rem; color: #faf8f4; font-weight: 400; }
+.exampleVal.gold { color: #c9a96e; }
+.exampleNote { font-size: .78rem; color: rgba(250,248,244,.4); line-height: 1.6; margin-top: 20px; font-style: italic; }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .heroGeo, .heroGeo2 { display: none; }
   .heroBtns { flex-direction: column; align-items: center; }
+  .pricingLayout { grid-template-columns: 1fr; gap: 40px; }
 }
 @media (max-width: 480px) {
   .heroHeadline { font-size: 2.4rem; }

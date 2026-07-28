@@ -23,18 +23,18 @@ export default function Footer() {
         </div>
 
         <div className={styles.col}>
-          <div className={styles.colTitle}>Business Lines</div>
+          <div className={styles.colTitle}>Management</div>
           <ul>
-            <li><Link href="/management">Vinclo Management</Link></li>
-            <li><Link href="/arbitrage">Vinclo Arbitrage</Link></li>
-            <li><Link href="/stays">Our Stays</Link></li>
+            <li><Link href="/#services">Services</Link></li>
+            <li><Link href="/#how-it-works">How It Works</Link></li>
+            <li><Link href="/#pricing">Pricing</Link></li>
           </ul>
         </div>
 
         <div className={styles.col}>
           <div className={styles.colTitle}>Company</div>
           <ul>
-            <li><Link href="/#why">Why Vinclo</Link></li>
+            <li><Link href="/portfolio">Portfolio</Link></li>
             <li><Link href="/#contact">Contact</Link></li>
             <li><Link href="/auth/login">Owner Login</Link></li>
           </ul>

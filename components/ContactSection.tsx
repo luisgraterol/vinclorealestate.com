@@ -1,15 +1,15 @@
 import { SITE } from '@/lib/content/site';
 import styles from './ContactSection.module.css';
 
-type Variant = 'general' | 'owner' | 'landlord' | 'guest';
+type Variant = 'general' | 'owner' | 'guest';
 
 const COPY: Record<Variant, { label: string; title: React.ReactNode; sub: string; box: React.ReactNode; boxSub: string }> = {
   general: {
     label: 'Contact',
     title: <>Let&apos;s start a<br /><em>conversation</em></>,
-    sub: 'Whether you own a property, own a unit to lease, or want to book a stay — we respond within one business day.',
+    sub: 'Whether you own a property you’d rather not manage or want to book a stay — we respond within one business day.',
     box: <>Own a property, or<br /><em>looking to book?</em></>,
-    boxSub: 'Reach out by email, call, or WhatsApp. We welcome property owners, landlords, and guests.',
+    boxSub: 'Reach out by email, call, or WhatsApp. We welcome property owners and guests.',
   },
   owner: {
     label: 'For Property Owners',
@@ -17,13 +17,6 @@ const COPY: Record<Variant, { label: string; title: React.ReactNode; sub: string
     sub: 'Tell us about your property and goals. We’ll assess the opportunity and show you how professional management changes the numbers — free, no obligation.',
     box: <>Schedule a free<br /><em>property consultation</em></>,
     boxSub: 'Email or message us about your property. We’ll review it and follow up within one business day.',
-  },
-  landlord: {
-    label: 'For Landlords',
-    title: <>Lease your unit<br /><em>to Vinclo</em></>,
-    sub: 'If you own a unit and would rather have consistent rent from a professional operator than manage tenants yourself, let’s talk terms.',
-    box: <>Talk to us about<br /><em>your unit</em></>,
-    boxSub: 'Send us the unit details. If it fits, we move quickly through analysis and lease terms.',
   },
   guest: {
     label: 'Book a Stay',

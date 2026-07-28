@@ -6,11 +6,11 @@ const faviconSvg =
 
 export const metadata: Metadata = {
   title: {
-    default: 'Vinclo Real Estate — Short-Term Rental Management & Operations',
+    default: 'Vinclo Management — Short-Term Rental Property Management',
     template: '%s | Vinclo Real Estate',
   },
   description:
-    'Professional short-term rental management and operations. Co-hosting and management for property owners, and rental arbitrage for landlords. Miami · Nashville · Abilene, TX.',
+    'Professional short-term rental management and co-hosting for property owners. You own the property — we handle the hosting. Miami · Nashville.',
   metadataBase: new URL('https://vinclorealestate.com'),
   icons: {
     icon: faviconSvg,

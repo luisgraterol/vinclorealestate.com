@@ -59,13 +59,13 @@ Markets: **Management** experience across Miami & Nashville; **Arbitrage** curre
 ## Product Scope
 
 ### Public Site
-Hub-and-spoke marketing site presenting both business lines with separate, audience-specific CTAs:
-- **`/` (home)** → dual value prop, the two business lines, proof/stats, property teaser, reviews, why-Vinclo, contact
-- **`/management`** → owners: services, how-it-works, aligned pricing, free consultation CTA
-- **`/arbitrage`** → landlords: guaranteed-rent benefits, how leasing works, market/deal discipline, "lease your unit" CTA
-- **`/stays`** → guests: furnished-property showcase, who-stays-with-us, reviews, "book on Airbnb"
+The public site is **Vinclo Management only** — one business line, one audience (property owners). The arbitrage line stays internal (see `/admin`); no public page references it.
+- **`/` (home)** → owner pitch: hero, value props, services, proof/stats, how-it-works, aligned pricing, reviews, owner contact CTA
+- **`/portfolio`** → proof of operating standard (Haven at The Gulch, Nashville). Placeholder today; rebuilt as an immersive case study in a later phase.
 
-Shared UI lives in `components/` (Nav, Footer, ContactSection, BusinessLines, StatsBand, PropertyGrid, Reviews, FeatureCards, ServiceGrid, Steps, icons). Copy/data lives in `lib/content/` (services, stats, properties, reviews, site). Real stats/reviews/listings are user-populated — placeholder entries are hidden from the live site automatically.
+Retired routes 301-redirect in `next.config.ts`: `/management` → `/`, `/arbitrage` → `/`, `/stays` → `/portfolio`.
+
+Shared UI lives in `components/` (Nav, Footer, ContactSection, StatsBand, Reviews, FeatureCards, ServiceGrid, Steps, icons). Copy/data lives in `lib/content/` (services, stats, properties, reviews, site). Real stats/reviews/listings are user-populated — placeholder entries are hidden from the live site automatically.
 
 ### Admin Portal (`/admin`)
 Internal tool for Vinclo operators. Password-protected.

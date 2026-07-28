@@ -1,4 +1,4 @@
-import { STATS } from '@/lib/content/stats';
+import { STATS, STATS_NOTE } from '@/lib/content/stats';
 import styles from './StatsBand.module.css';
 
 export default function StatsBand() {
@@ -16,6 +16,7 @@ export default function StatsBand() {
           </div>
         ))}
       </div>
+      {STATS_NOTE && <p className={styles.note}>{STATS_NOTE}</p>}
     </section>
   );
 }
