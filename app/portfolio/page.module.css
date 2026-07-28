@@ -1,0 +1,183 @@
+.page { font-family: 'DM Sans', system-ui, sans-serif; background: #faf8f4; color: #3d3530; font-size: 16px; line-height: 1.6; overflow-x: hidden; font-optical-sizing: auto; }
+
+/* HERO */
+.hero {
+  position: relative;
+  min-height: 92svh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: #1b3626;
+}
+.heroMedia { position: absolute; inset: 0; }
+.heroMedia img { object-fit: cover; }
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(23, 46, 33, 0.4) 0%, rgba(23, 46, 33, 0.24) 40%, rgba(17, 34, 25, 0.9) 100%);
+}
+.heroInner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 140px 5vw clamp(72px, 11vh, 130px);
+}
+.kicker {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #c9a96e;
+  margin-bottom: 24px;
+}
+.heroHeadline {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(2.9rem, 7vw, 6rem);
+  line-height: 1.04;
+  letter-spacing: -0.015em;
+  color: #faf8f4;
+  margin-bottom: 20px;
+  text-wrap: balance;
+}
+.heroHeadline em { font-style: italic; color: #c9a96e; }
+.heroSub {
+  font-size: 1.02rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(250, 248, 244, 0.88);
+  max-width: 50ch;
+}
+
+/* INTRO */
+.intro { background: #faf8f4; }
+.introGrid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: clamp(40px, 6vw, 90px);
+  align-items: start;
+}
+.introBody {
+  font-size: 1.02rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: #5a4f47;
+  max-width: 58ch;
+  margin-bottom: 28px;
+}
+.facts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+}
+.facts li {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.15rem;
+  color: #254a34;
+  padding-top: 12px;
+  border-top: 1px solid rgba(37, 74, 52, 0.18);
+}
+
+/* IMAGE SEQUENCES */
+.sequence { padding: 0 0 20px; }
+.pairGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px 0 0;
+}
+.pairGridOffset {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 20px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.tripleGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.seqHeader {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 48px;
+}
+.seqHeader :global(.section-intro) { margin-left: auto; margin-right: auto; }
+.residences { background: #faf8f4; padding-bottom: 20px; }
+.residences .pairGrid { max-width: none; }
+.amenities { background: #f2ede4; }
+.neighborhood { background: #faf8f4; }
+
+/* STATEMENT */
+.statement {
+  background: #254a34;
+  padding: clamp(100px, 14vw, 170px) 5vw;
+  text-align: center;
+}
+.statementText {
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(1.8rem, 3.8vw, 3rem);
+  line-height: 1.25;
+  color: #faf8f4;
+  text-wrap: balance;
+}
+.statementText em { font-style: italic; color: #c9a96e; }
+
+/* VIDEO */
+.videoLine {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(250, 248, 244, 0.85);
+}
+
+/* CLOSING */
+.closing {
+  background: #254a34;
+  padding: clamp(110px, 15vw, 180px) 5vw;
+  text-align: center;
+}
+.closingInner { max-width: 820px; margin: 0 auto; }
+.closingHeadline {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  line-height: 1.1;
+  color: #faf8f4;
+  margin-bottom: 22px;
+  text-wrap: balance;
+}
+.closingHeadline em { font-style: italic; color: #c9a96e; }
+.closingSub {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(250, 248, 244, 0.75);
+  max-width: 52ch;
+  margin: 0 auto 36px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .introGrid { grid-template-columns: 1fr; gap: 28px; }
+}
+@media (max-width: 700px) {
+  .pairGrid, .pairGridOffset, .tripleGrid { grid-template-columns: 1fr; }
+}
