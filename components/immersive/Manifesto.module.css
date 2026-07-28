@@ -1,0 +1,26 @@
+.section {
+  background: #254a34;
+  padding: clamp(120px, 16vw, 200px) 5vw;
+}
+
+.statement {
+  max-width: 980px;
+  margin: 0 auto;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(1.9rem, 4.2vw, 3.4rem);
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  color: #faf8f4;
+  text-wrap: balance;
+}
+
+.statement em {
+  font-style: italic;
+  color: #c9a96e;
+}
+
+.w {
+  /* Fully visible by default; GSAP dims then scrubs back to 1. */
+  display: inline;
+}
