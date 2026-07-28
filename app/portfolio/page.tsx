@@ -9,6 +9,7 @@ import Reveal from '@/components/immersive/Reveal';
 import RevealText from '@/components/immersive/RevealText';
 import ParallaxImage from '@/components/immersive/ParallaxImage';
 import VideoLoop from '@/components/immersive/VideoLoop';
+import Atmosphere from '@/components/immersive/webgl/Atmosphere';
 import styles from './page.module.css';
 
 const TITLE = 'Haven at The Gulch, Nashville — Portfolio | Vinclo Management';
@@ -52,6 +53,7 @@ export default function PortfolioPage() {
             />
           </div>
           <div className={styles.heroScrim} aria-hidden="true" />
+          <Atmosphere />
           <div className={styles.heroInner}>
             <p className={styles.kicker}>Portfolio &middot; Nashville, Tennessee</p>
             <RevealText as="h1" className={styles.heroHeadline} trigger="event">

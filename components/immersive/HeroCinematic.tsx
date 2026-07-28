@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import RevealText from './RevealText';
+import Atmosphere from './webgl/Atmosphere';
 import { ensureGsap, motionOK, EASE, REVEAL_EVENT } from './motion';
 import styles from './HeroCinematic.module.css';
 
@@ -87,6 +88,7 @@ export default function HeroCinematic() {
       </div>
       <div className={styles.scrim} aria-hidden="true" />
       <div className={styles.grain} aria-hidden="true" />
+      <Atmosphere />
 
       <div className={styles.inner}>
         <p className={styles.kicker} data-hero-fade>
