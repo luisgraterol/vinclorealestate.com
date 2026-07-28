@@ -1,0 +1,57 @@
+.figure {
+  position: relative;
+  overflow: hidden;
+  background: #254a34;
+  margin: 0;
+}
+
+.wide {
+  aspect-ratio: 21 / 9;
+}
+
+.standard {
+  aspect-ratio: 3 / 2;
+}
+
+.tall {
+  aspect-ratio: 4 / 5;
+}
+
+/* Oversized so the parallax drift never exposes edges. */
+.inner {
+  position: absolute;
+  inset: -8% 0;
+  will-change: transform;
+}
+
+.inner img {
+  object-fit: cover;
+}
+
+.tint {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(37, 74, 52, 0.06), rgba(37, 74, 52, 0.18));
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.caption {
+  position: absolute;
+  left: 18px;
+  bottom: 14px;
+  z-index: 1;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(250, 248, 244, 0.92);
+  text-shadow: 0 1px 8px rgba(17, 34, 25, 0.6);
+}
+
+@media (max-width: 700px) {
+  .wide {
+    aspect-ratio: 16 / 10;
+  }
+}
