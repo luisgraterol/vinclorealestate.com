@@ -1,4 +1,5 @@
 import { STATS, STATS_NOTE } from '@/lib/content/stats';
+import StatValue from '@/components/immersive/StatValue';
 import styles from './StatsBand.module.css';
 
 export default function StatsBand() {
@@ -11,7 +12,7 @@ export default function StatsBand() {
       <div className={styles.inner}>
         {stats.map(s => (
           <div key={s.label} className={styles.stat}>
-            <div className={styles.value}>{s.value}</div>
+            <div className={styles.value}><StatValue value={s.value} /></div>
             <div className={styles.label}>{s.label}</div>
           </div>
         ))}

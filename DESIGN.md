@@ -226,7 +226,34 @@ Full-width gold fill (`#c9a96e`). DM Sans text in navy, 0.7rem, 500 weight, 0.18
 
 ---
 
-## 6. Do's and Don'ts
+## 6. Motion System (immersive layer, Phase 2)
+
+The public homepage runs a choreographed scroll experience built on Lenis
+(smooth scroll) + GSAP ScrollTrigger, all living in `components/immersive/`.
+`motion.ts` is the single entry point: easing vocabulary (`power3.out`
+entrances, `none` for scrubs), durations (0.8–1.2s reveals), and the
+`motionOK()` gate.
+
+**The Progressive Contract (non-negotiable):** server HTML is always the
+complete, visible page. GSAP hides elements only after mount and only when
+`prefers-reduced-motion` is off. No-JS, bots, and reduced-motion users get a
+fully static, fully readable page — the pinned pillars lay out as stacked
+panels, videos render as posters, counters show final values.
+
+Vocabulary:
+- **Preloader** — once per session, ≤2s, wordmark + gold rule, curtain lift.
+  Fires `vinclo:reveal`; the hero entrance waits for it.
+- **Masked word-rise** (`RevealText`) — display headlines split into words that
+  slide up out of overflow masks. `power4.out`, 55ms stagger.
+- **Scrub scenes** — Manifesto word-brightening and the PinnedPillars
+  crossfade tie progress to scroll position (`scrub`), never to timers.
+- **Photography treatment** — bright MLS photos sit under a cypress multiply
+  tint (8–22%) and, in the hero, a cypress scrim + 7% film grain so imagery
+  stays inside the brand world.
+- **Video** — muted, looped, `preload="metadata"`, poster-backed, played only
+  while on screen via IntersectionObserver.
+
+## 7. Do's and Don'ts
 
 ### Do:
 - **Do** use navy (`#0f1f2e`) as the background for any section that needs authority: hero, trust, admin, footer, contact CTA.

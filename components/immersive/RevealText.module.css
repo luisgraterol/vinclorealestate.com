@@ -1,0 +1,13 @@
+.mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  /* Serif descenders (g, y, p) need room inside the mask. */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.word {
+  display: inline-block;
+  will-change: transform;
+}

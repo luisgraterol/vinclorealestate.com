@@ -13,6 +13,12 @@
     scroll-behavior: smooth;
   }
 
+  /* Native smooth-scroll fights Lenis's programmatic scrolling when the
+     immersive layer is active (Lenis stamps this class on <html>). */
+  html.lenis {
+    scroll-behavior: auto;
+  }
+
   body {
     font-family: 'DM Sans', system-ui, sans-serif;
     background: #faf8f4;
