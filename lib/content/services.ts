@@ -1,8 +1,9 @@
 import type { IconName } from '@/components/icons';
 
-// Content for the two business lines. Copy is derived from the Vinclo
-// strategy brief (cohosting.md). Text-only here; icons are referenced by
-// key and rendered via components/icons.tsx.
+// Content for Vinclo Management — the single public business line
+// (short-term rental management / co-hosting for property owners). Copy is
+// derived from the Vinclo strategy brief (cohosting.md). Text-only here;
+// icons are referenced by key and rendered via components/icons.tsx.
 
 export interface ValueProp {
   icon: IconName;
@@ -84,69 +85,4 @@ export const MANAGEMENT_PROCESS: Step[] = [
   { num: '03', title: 'Proposal', desc: 'A clear scope: services included, responsibilities on both sides, commission, and onboarding steps.' },
   { num: '04', title: 'Onboarding', desc: 'Access, property details, vendors, inventory, rules, and emergency info — organized so nothing slips.' },
   { num: '05', title: 'Launch or transition', desc: 'New listing built and launched, or an existing operation taken over without disrupting current bookings.' },
-];
-
-/* ---------------- Vinclo Arbitrage (landlords / leasing) ---------------- */
-
-// cohosting.md §4/§7 — what Arbitrage sells to a landlord.
-export const ARBITRAGE_BENEFITS: ValueProp[] = [
-  {
-    icon: 'dollar',
-    title: 'Consistent monthly rent',
-    desc: 'We lease your unit directly and pay on a fixed schedule — you get reliable rent from a professional operator instead of chasing individual tenants.',
-  },
-  {
-    icon: 'check-circle',
-    title: 'Professional operation',
-    desc: 'We furnish, clean, maintain, and manage the unit to a hospitality standard. Your property is run like a business asset, not a rental you hope stays tidy.',
-  },
-  {
-    icon: 'shield',
-    title: 'Protected & well-kept',
-    desc: 'Insured short-term rental operation with guest screening and 24-hour issue response. Your unit is maintained in consistent, guest-ready condition.',
-  },
-  {
-    icon: 'document',
-    title: 'Clean legal framework',
-    desc: 'A clear lease with a short-term-rental subletting addendum that defines responsibilities and protects your rights — no ambiguity.',
-  },
-];
-
-// cohosting.md §9 — arbitrage deal process, landlord-appropriate subset.
-export const ARBITRAGE_PROCESS: Step[] = [
-  { num: '01', title: 'Unit review', desc: 'We confirm subletting is permitted, check local STR regulations, and gather unit and market details.' },
-  { num: '02', title: 'Financial analysis', desc: 'Every unit runs through our deal analyzer with conservative and base-case assumptions before we make an offer.' },
-  { num: '03', title: 'Lease terms', desc: 'We agree lease length, rent, deposit, and subletting permissions — terms that work for both sides.' },
-  { num: '04', title: 'Setup', desc: 'Furnishing, professional listing, smart locks, supplies, and a local vendor lineup.' },
-  { num: '05', title: 'Launch', desc: 'Your unit goes live across Airbnb, VRBO, and other platforms — operated entirely by Vinclo.' },
-];
-
-// cohosting.md §12 — shared trust signals (used on home + interior pages).
-export interface TrustItem {
-  icon: IconName;
-  title: string;
-  desc: string;
-}
-
-export const TRUST_ITEMS: TrustItem[] = [
-  {
-    icon: 'shield',
-    title: 'Licensed & insured',
-    desc: 'A formal US business entity operating with short-term-rental insurance coverage on the units we run.',
-  },
-  {
-    icon: 'chart',
-    title: 'Data-driven decisions',
-    desc: 'The same financial modeling that underwrites our own arbitrage deals informs how we price and report on every property.',
-  },
-  {
-    icon: 'users',
-    title: 'Real operating track record',
-    desc: 'Hands-on hosting experience across Miami and Nashville, and an active arbitrage operation in Abilene, TX.',
-  },
-  {
-    icon: 'check-circle',
-    title: 'Professional systems',
-    desc: 'Guest communication, pricing, cleaning, and reporting run on a shared operational backbone — personal attention, backed by systems.',
-  },
 ];

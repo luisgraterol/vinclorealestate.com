@@ -9,10 +9,9 @@ interface NavProps {
 }
 
 const LINKS = [
-  { href: '/management', label: 'Management' },
-  { href: '/arbitrage', label: 'Arbitrage' },
-  { href: '/stays', label: 'Stays' },
-  { href: '/#why', label: 'Why Vinclo' },
+  { href: '/#services', label: 'Services' },
+  { href: '/#how-it-works', label: 'How It Works' },
+  { href: '/portfolio', label: 'Portfolio' },
   { href: '/auth/login', label: 'Login' },
 ];
 

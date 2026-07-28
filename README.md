@@ -1,6 +1,6 @@
 # vinclorealestate.com
 
-Site for **Vinclo Real Estate** — a Texas-based short-term rental arbitrage business. Deployed on Vercel with Supabase for auth and data persistence.
+Site for **Vinclo Real Estate** — a short-term rental property management company. The public site presents **Vinclo Management** only (owner-facing STR management and co-hosting); internal operating tools live behind `/admin`. Deployed on Vercel with Supabase for auth and data persistence.
 
 ## Stack
 
