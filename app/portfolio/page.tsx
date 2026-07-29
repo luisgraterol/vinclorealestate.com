@@ -137,28 +137,48 @@ export default function PortfolioPage() {
             </Reveal>
           </div>
           <ParallaxImage
-            src="/portfolio/interior-426-living-skyline.jpg"
-            alt="Living room of unit 426 with wide windows over the Nashville skyline"
+            src="/portfolio/furnished-living-skyline.jpg"
+            alt="Furnished living area with a grey sofa and kitchenette against a wall of windows over the Nashville skyline"
             aspect="wide"
-            caption="Unit 426 · Living"
+            caption="Living, with the skyline"
           />
           <div className={styles.pairGrid}>
             <Reveal variant="fade">
               <ParallaxImage
-                src="/portfolio/interior-426-kitchen-city.jpg"
-                alt="Kitchen of unit 426 with the city visible past the island"
+                src="/portfolio/furnished-bedroom-accent.jpg"
+                alt="Bedroom with a wood-panelled accent wall, brass sconces, and a teal armchair by the window"
                 aspect="standard"
                 sizes="(max-width: 700px) 100vw, 50vw"
-                caption="Unit 426 · Kitchen"
+                caption="Bedroom"
               />
             </Reveal>
             <Reveal variant="fade" delay={0.12}>
               <ParallaxImage
-                src="/portfolio/interior-1017-kitchen.jpg"
-                alt="Kitchen of unit 1017 with stainless appliances and warm wood cabinetry"
+                src="/portfolio/furnished-living-tv.jpg"
+                alt="Living area with a wall-mounted television, sofa, and city views through floor-to-ceiling glass"
                 aspect="standard"
                 sizes="(max-width: 700px) 100vw, 50vw"
-                caption="Unit 1017 · Kitchen"
+                caption="Living"
+              />
+            </Reveal>
+          </div>
+          <div className={styles.pairGrid}>
+            <Reveal variant="fade">
+              <ParallaxImage
+                src="/portfolio/furnished-kitchenette.jpg"
+                alt="Kitchenette with a stone counter, wine fridge, and open shelving beside the windows"
+                aspect="standard"
+                sizes="(max-width: 700px) 100vw, 50vw"
+                caption="Kitchenette"
+              />
+            </Reveal>
+            <Reveal variant="fade" delay={0.12}>
+              <ParallaxImage
+                src="/portfolio/furnished-bath-terrazzo.jpg"
+                alt="Bathroom with a terrazzo counter, brass fixtures, and a round mirror lit by a city-facing window"
+                aspect="standard"
+                sizes="(max-width: 700px) 100vw, 50vw"
+                caption="Bath"
               />
             </Reveal>
           </div>
