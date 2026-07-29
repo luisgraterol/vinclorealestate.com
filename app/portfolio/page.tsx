@@ -14,7 +14,7 @@ import styles from './page.module.css';
 
 const TITLE = 'Haven at The Gulch, Nashville — Portfolio | Vinclo Management';
 const DESCRIPTION =
-  'Inside Haven at The Gulch: the Nashville residences Vinclo Management operates, and the standard we hold on every property we run. Two units in the Gulch, professionally hosted.';
+  'Inside Haven at The Gulch: the Nashville residences Vinclo Management operates, and the standard we hold on every property we run. Professionally hosted residences in the Gulch.';
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -70,20 +70,19 @@ export default function PortfolioPage() {
           <div className={styles.introGrid}>
             <Reveal>
               <RevealText as="h2" className="section-title">
-                Two residences, <em>one standard</em>
+                Every residence, <em>one standard</em>
               </RevealText>
             </Reveal>
             <Reveal delay={0.1}>
               <p className={styles.introBody}>
                 Haven sits in The Gulch, Nashville&apos;s walkable core of restaurants,
-                music venues, and murals. We host two residences here, units 426 and
-                1017, and run them the way we pitch every owner: priced nightly with
-                real data, turned over on an inspection checklist, and answered at
-                any hour.
+                music venues, and murals. We host residences here, and we run them
+                the way we pitch every owner: priced nightly with real data, turned
+                over on an inspection checklist, and answered at any hour.
               </p>
               <ul className={styles.facts}>
                 <li>The Gulch, Nashville</li>
-                <li>Units 426 &amp; 1017</li>
+                <li>Furnished &amp; fully hosted</li>
                 <li>Pool, gym &amp; courtyard</li>
                 <li>Skyline views</li>
               </ul>
