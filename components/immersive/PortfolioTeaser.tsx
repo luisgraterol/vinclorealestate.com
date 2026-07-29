@@ -58,7 +58,7 @@ export default function PortfolioTeaser() {
         <h2 className={styles.headline}>
           Haven at <em>The Gulch</em>
         </h2>
-        <p className={styles.sub}>Nashville, Tennessee. Two units, one standard.</p>
+        <p className={styles.sub}>Nashville, Tennessee. One standard, every stay.</p>
         <Link href="/portfolio" className="btn-primary">
           View the property <span className="btn-arrow">&#8594;</span>
         </Link>
