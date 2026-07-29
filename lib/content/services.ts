@@ -78,11 +78,11 @@ export const MANAGEMENT_SERVICES: ServiceItem[] = [
   },
 ];
 
-// cohosting.md §9 — management sales/onboarding process.
+// The four onboarding stages from the Vinclo Management one-pager
+// ("Onboarding, at a glance"), detailed with the process copy in cohosting.md §9.
 export const MANAGEMENT_PROCESS: Step[] = [
-  { num: '01', title: 'Free consultation', desc: 'We learn your property, your goals, and where the current operation is falling short — no obligation.' },
-  { num: '02', title: 'Property analysis', desc: 'Market, competition, rates, estimated occupancy, listing quality, and improvement opportunities. We never promise guaranteed income.' },
-  { num: '03', title: 'Proposal', desc: 'A clear scope: services included, responsibilities on both sides, commission, and onboarding steps.' },
-  { num: '04', title: 'Onboarding', desc: 'Access, property details, vendors, inventory, rules, and emergency info — organized so nothing slips.' },
-  { num: '05', title: 'Launch or transition', desc: 'New listing built and launched, or an existing operation taken over without disrupting current bookings.' },
+  { num: '01', title: 'Discovery', desc: 'A free consultation to learn your property and your goals, followed by an analysis of market, competition, rates, occupancy, and listing quality. We never promise guaranteed income.' },
+  { num: '02', title: 'Proposal', desc: 'A clear scope: services included, responsibilities on both sides, commission, and the steps to get started.' },
+  { num: '03', title: 'Setup', desc: 'Access, property details, vendors, inventory, rules, and emergency info organized so nothing slips, with the listing built and optimized.' },
+  { num: '04', title: 'Launch', desc: 'Your listing goes live, or we take over an existing operation without disrupting the bookings already on the calendar.' },
 ];

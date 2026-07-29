@@ -8,16 +8,16 @@ import styles from './PinnedPillars.module.css';
 
 const IMAGES = [
   {
-    src: '/portfolio/interior-426-living-skyline.jpg',
-    alt: 'Living room at Haven at The Gulch with floor-to-ceiling windows over the Nashville skyline',
+    src: '/portfolio/furnished-living-skyline.jpg',
+    alt: 'Furnished living area at Haven at The Gulch, sofa and kitchenette against a wall of windows over the Nashville skyline',
   },
   {
-    src: '/portfolio/interior-1017-kitchen-living.jpg',
-    alt: 'Open kitchen and living space at Haven at The Gulch, unit 1017',
+    src: '/portfolio/furnished-bedroom-accent.jpg',
+    alt: 'Made-up bedroom at Haven at The Gulch with a wood accent wall, brass sconces, and city views',
   },
   {
-    src: '/portfolio/courtyard-pool-haven.jpg',
-    alt: 'Courtyard pool at Haven at The Gulch beneath the Haven sign',
+    src: '/portfolio/furnished-bath-terrazzo.jpg',
+    alt: 'Bathroom at Haven at The Gulch with a terrazzo counter, brass fixtures, and a round mirror',
   },
 ];
 
