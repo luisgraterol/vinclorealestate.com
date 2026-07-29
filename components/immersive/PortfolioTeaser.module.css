@@ -4,7 +4,7 @@
   display: flex;
   align-items: flex-end;
   overflow: hidden;
-  background: #254a34;
+  background: #152c44;
 }
 
 .media {
@@ -24,7 +24,7 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(23, 46, 33, 0.25) 0%, rgba(23, 46, 33, 0.45) 55%, rgba(23, 46, 33, 0.88) 100%);
+    linear-gradient(180deg, rgba(13, 27, 42, 0.25) 0%, rgba(13, 27, 42, 0.45) 55%, rgba(13, 27, 42, 0.88) 100%);
 }
 
 .content {

@@ -7,14 +7,14 @@
   display: flex;
   align-items: flex-end;
   overflow: hidden;
-  background: #1b3626;
+  background: #102135;
 }
 .heroMedia { position: absolute; inset: 0; }
 .heroMedia img { object-fit: cover; }
 .heroScrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(23, 46, 33, 0.4) 0%, rgba(23, 46, 33, 0.24) 40%, rgba(17, 34, 25, 0.9) 100%);
+  background: linear-gradient(180deg, rgba(13, 27, 42, 0.4) 0%, rgba(13, 27, 42, 0.24) 40%, rgba(8, 18, 29, 0.9) 100%);
 }
 .heroInner {
   position: relative;
@@ -81,9 +81,9 @@
 .facts li {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 1.15rem;
-  color: #254a34;
+  color: #152c44;
   padding-top: 12px;
-  border-top: 1px solid rgba(37, 74, 52, 0.18);
+  border-top: 1px solid rgba(21, 44, 68, 0.18);
 }
 
 /* IMAGE SEQUENCES */
@@ -122,7 +122,7 @@
 
 /* STATEMENT */
 .statement {
-  background: #254a34;
+  background: #152c44;
   padding: clamp(100px, 14vw, 170px) 5vw;
   text-align: center;
 }
@@ -150,7 +150,7 @@
 
 /* CLOSING */
 .closing {
-  background: #254a34;
+  background: #152c44;
   padding: clamp(110px, 15vw, 180px) 5vw;
   text-align: center;
 }

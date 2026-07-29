@@ -36,7 +36,7 @@
   font-weight: 400;
   font-size: clamp(1.9rem, 3.2vw, 2.7rem);
   line-height: 1.12;
-  color: #254a34;
+  color: #152c44;
   margin-bottom: 16px;
   text-wrap: balance;
 }
@@ -53,18 +53,18 @@
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: #254a34;
+  background: #152c44;
 }
 
 .frame img {
   object-fit: cover;
 }
 
-/* Cypress tint pulls the bright MLS photography into the brand world. */
+/* Navy tint pulls the bright MLS photography into the brand world. */
 .tint {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(37, 74, 52, 0.08), rgba(37, 74, 52, 0.22));
+  background: linear-gradient(180deg, rgba(21, 44, 68, 0.08), rgba(21, 44, 68, 0.22));
   mix-blend-mode: multiply;
   pointer-events: none;
 }

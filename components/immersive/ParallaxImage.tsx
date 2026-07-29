@@ -16,7 +16,7 @@ interface ParallaxImageProps {
   priority?: boolean;
 }
 
-// Editorial image with a slow internal parallax drift and the brand's cypress
+// Editorial image with a slow internal parallax drift and the brand's navy
 // tint. Static (no drift) without JS or with reduced motion.
 export default function ParallaxImage({
   src,

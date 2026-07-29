@@ -3,7 +3,7 @@
   display: flex;
   align-items: flex-end;
   overflow: hidden;
-  background: #254a34;
+  background: #152c44;
 }
 
 .media {
@@ -22,7 +22,7 @@
 .scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(23, 46, 33, 0.16) 0%, rgba(23, 46, 33, 0.3) 60%, rgba(17, 34, 25, 0.72) 100%);
+  background: linear-gradient(180deg, rgba(13, 27, 42, 0.16) 0%, rgba(13, 27, 42, 0.3) 60%, rgba(8, 18, 29, 0.72) 100%);
 }
 
 .content {

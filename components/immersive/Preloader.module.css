@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: center;
   gap: 22px;
-  background: #254a34;
+  background: #152c44;
   /* CSS failsafe: even if JS dies after the boot script ran, the shroud
      removes itself and the page underneath is fully rendered. */
   animation: shroud-failsafe 0.6s ease 3.4s forwards;

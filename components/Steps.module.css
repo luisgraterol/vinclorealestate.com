@@ -6,9 +6,9 @@
 .desc { font-size: .85rem; color: rgba(250,248,244,.5); line-height: 1.65; font-weight: 300; text-wrap: pretty; }
 
 /* Light variant (on cream background) */
-.light .step { background: white; border-color: rgba(37,74,52,.08); }
+.light .step { background: white; border-color: rgba(21, 44, 68,.08); }
 .light .num { color: #c9a96e; }
-.light .title { color: #254a34; }
+.light .title { color: #152c44; }
 .light .desc { color: #7a6e65; }
 
 @media (max-width: 1024px) { .steps { grid-template-columns: 1fr 1fr; } }
