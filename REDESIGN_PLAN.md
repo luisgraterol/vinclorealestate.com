@@ -189,6 +189,15 @@ Evolve:
 
 ## 7. Execution phases
 
+> **Status (2026-07-28):** Phases 0–4 shipped and merged to main
+> (PRs #33 homepage/routing + assets, #34 scroll foundation, #35 portfolio,
+> #36 WebGL atmosphere). Remaining: Phase 5 polish & hardening — Lighthouse /
+> Core Web Vitals pass, cross-device QA, impeccable design audit, Playwright
+> smoke tests for redirects + reduced motion, `npm run lint` repair (broken
+> since Next 16 removed `next lint`), DESIGN.md palette reconciliation (doc
+> says navy #0f1f2e; shipped code uses cypress #254a34), and the pre-existing
+> `npm audit` toolchain findings.
+
 Each phase lands as its own PR, reviewable in isolation. Simple, well-scoped subtasks
 (asset processing scripts, content purge, redirects) can go to **Opus/Sonnet subagents**;
 design-critical work (WebGL scenes, scroll choreography, art direction) stays in the
