@@ -1,28 +1,5 @@
 .page { font-family: 'DM Sans', system-ui, sans-serif; background: #faf8f4; color: #3d3530; font-size: 16px; line-height: 1.6; overflow-x: hidden; font-optical-sizing: auto; }
 
-/* SERIF TICKER — slow, quiet strip between the hero and the manifesto */
-.ticker {
-  background: #f2ede4;
-  border-top: 1px solid rgba(21, 44, 68, 0.1);
-  border-bottom: 1px solid rgba(21, 44, 68, 0.1);
-  padding: 18px 0;
-  overflow: hidden;
-  white-space: nowrap;
-}
-.tickerInner { display: inline-flex; animation: marquee 64s linear infinite; }
-.tickerItem {
-  display: inline-flex; align-items: center; gap: 40px; padding: 0 44px;
-  font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic;
-  font-size: 1.15rem; font-weight: 400; letter-spacing: 0.02em; color: #a8885a;
-}
-.tickerDiamond {
-  width: 5px; height: 5px; background: #c9a96e; opacity: 0.6;
-  transform: rotate(45deg);
-}
-@media (prefers-reduced-motion: reduce) {
-  .tickerInner { animation: none; }
-}
-
 /* SHARED SECTION HEADERS (home) */
 .centerHeader { text-align: center; margin-bottom: 48px; max-width: 720px; margin-left: auto; margin-right: auto; }
 .centerHeader :global(.section-intro) { margin-left: auto; margin-right: auto; }

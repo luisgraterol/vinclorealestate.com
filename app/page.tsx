@@ -33,16 +33,6 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION },
 };
 
-const TICKER = [
-  'Property Management',
-  'Co-Hosting',
-  'Revenue Management',
-  'Guest Experience',
-  'Owner Reporting',
-  'Miami',
-  'Nashville',
-];
-
 export default function HomePage() {
   return (
     <div className={styles.page}>
@@ -53,22 +43,6 @@ export default function HomePage() {
 
       <main>
         <HeroCinematic />
-
-        {/* Serif ticker */}
-        <div className={styles.ticker} aria-hidden="true">
-          <div className={styles.tickerInner}>
-            {Array.from({ length: 2 }).map((_, i) => (
-              <span key={i} style={{ display: 'contents' }}>
-                {TICKER.map(m => (
-                  <span key={m} className={styles.tickerItem}>
-                    {m}
-                    <span className={styles.tickerDiamond} />
-                  </span>
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
 
         <Manifesto />
 
