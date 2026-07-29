@@ -1,24 +1,24 @@
 .contact { background: #f2ede4; position: relative; overflow: hidden; padding: 120px 5vw 100px; }
 .inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; max-width: 1200px; margin: 0 auto; }
-.geo { position: absolute; right: -60px; top: -60px; width: 320px; height: 320px; border: 1px solid rgba(37,74,52,.06); transform: rotate(20deg); pointer-events: none; }
-.geo::before { content: ''; position: absolute; inset: 30px; border: 1px solid rgba(37,74,52,.04); }
+.geo { position: absolute; right: -60px; top: -60px; width: 320px; height: 320px; border: 1px solid rgba(21, 44, 68,.06); transform: rotate(20deg); pointer-events: none; }
+.geo::before { content: ''; position: absolute; inset: 30px; border: 1px solid rgba(21, 44, 68,.04); }
 .detail { display: flex; flex-direction: column; gap: 28px; margin-top: 8px; }
 .line { display: flex; align-items: flex-start; gap: 18px; }
 .icon { width: 36px; height: 36px; flex-shrink: 0; border: 1px solid rgba(201,169,110,.3); display: flex; align-items: center; justify-content: center; margin-top: 2px; }
 .icon svg { width: 16px; height: 16px; stroke: #a8885a; }
 .lineLabel { font-size: .65rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: #7a6e65; margin-bottom: 4px; }
-.lineValue { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.1rem; color: #254a34; font-weight: 400; }
+.lineValue { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.1rem; color: #152c44; font-weight: 400; }
 .lineValue a { color: inherit; text-decoration: none; transition: color .35s; }
 .lineValue a:hover { color: #a8885a; }
 
-.ctaBox { background: #254a34; padding: 52px 44px; position: relative; overflow: hidden; z-index: 1; }
+.ctaBox { background: #152c44; padding: 52px 44px; position: relative; overflow: hidden; z-index: 1; }
 .ctaBox::before { content: ''; position: absolute; top: -1px; left: 0; right: 0; height: 2px; background: #c9a96e; }
 .ctaBox h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.6rem; font-weight: 300; color: #faf8f4; line-height: 1.25; margin-bottom: 14px; text-wrap: balance; }
 .ctaBox h3 em { font-style: italic; color: #c9a96e; }
 .ctaBox p { font-size: .9rem; color: rgba(250,248,244,.5); line-height: 1.75; margin-bottom: 28px; font-weight: 400; text-wrap: pretty; letter-spacing: .01em; }
 .actions { display: flex; flex-direction: column; gap: 10px; }
 .btnGold { display: inline-flex; align-items: center; gap: 10px; padding: 12px 30px; border: 1px solid #c9a96e; color: #c9a96e; font-family: 'DM Sans', system-ui, sans-serif; font-size: .75rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; border-radius: 2px; transition: background .35s, color .35s; width: fit-content; }
-.btnGold:hover { background: #c9a96e; color: #254a34; }
+.btnGold:hover { background: #c9a96e; color: #152c44; }
 .btnWhatsapp { display: inline-flex; align-items: center; gap: 10px; padding: 12px 30px; border: 1px solid rgba(250,248,244,.18); color: rgba(250,248,244,.55); font-family: 'DM Sans', system-ui, sans-serif; font-size: .75rem; font-weight: 400; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; border-radius: 2px; transition: border-color .35s, color .35s; width: fit-content; }
 .btnWhatsapp:hover { border-color: rgba(250,248,244,.4); color: #faf8f4; }
 .btnWhatsapp svg { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }

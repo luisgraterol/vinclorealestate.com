@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import RevealText from './RevealText';
@@ -8,11 +8,34 @@ import Atmosphere from './webgl/Atmosphere';
 import { ensureGsap, motionOK, EASE, REVEAL_EVENT } from './motion';
 import styles from './HeroCinematic.module.css';
 
-// Full-viewport photographic hero: Haven at The Gulch at dusk, cypress scrim,
-// film grain, parallax drift, and an entrance that waits for the preloader.
-// Without JS the photo, scrim, and copy are all fully present.
+// Full-viewport cinematic hero: a seamless drone-orbit loop of Haven at The
+// Gulch over a poster frame, navy scrim, film grain, parallax drift, and an
+// entrance that waits for the preloader. Without JS or with reduced motion
+// the poster, scrim, and copy are all fully present and nothing plays.
 export default function HeroCinematic() {
   const ref = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [withVideo, setWithVideo] = useState(false);
+
+  useEffect(() => {
+    if (motionOK()) setWithVideo(true);
+  }, []);
+
+  // Play only while the hero is on screen.
+  useEffect(() => {
+    const el = ref.current;
+    const video = videoRef.current;
+    if (!el || !video) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [withVideo]);
 
   useEffect(() => {
     const el = ref.current;
@@ -78,13 +101,26 @@ export default function HeroCinematic() {
     <section ref={ref} className={styles.hero} id="hero">
       <div className={styles.media}>
         <Image
-          src="/portfolio/hero-twilight-facade.jpg"
-          alt="Haven at The Gulch apartment building in Nashville at dusk"
+          src="/portfolio/video/poster-hero.jpg"
+          alt="Drone view of Haven at The Gulch with the Nashville skyline beyond"
           fill
           priority
           quality={85}
           sizes="100vw"
         />
+        {withVideo && (
+          <video
+            ref={videoRef}
+            className={styles.video}
+            src="/portfolio/video/loop-hero.mp4"
+            muted
+            loop
+            playsInline
+            autoPlay
+            preload="auto"
+            aria-hidden="true"
+          />
+        )}
       </div>
       <div className={styles.scrim} aria-hidden="true" />
       <div className={styles.grain} aria-hidden="true" />

@@ -36,7 +36,7 @@
 
 /* ============================================================
    Shared design primitives — used across all public pages
-   (colors mirror tailwind.config.mjs: cypress #254a34,
+   (colors mirror tailwind.config.mjs: navy #152c44,
     gold #c9a96e / #a8885a, cream #faf8f4, body #3d3530)
    ============================================================ */
 @layer components {
@@ -49,7 +49,7 @@
   /* Buttons */
   .btn-primary {
     display: inline-flex; align-items: center; gap: 12px; padding: 15px 40px;
-    background: #c9a96e; color: #254a34; border: none; cursor: pointer;
+    background: #c9a96e; color: #152c44; border: none; cursor: pointer;
     font-family: 'DM Sans', system-ui, sans-serif; font-size: .78rem; font-weight: 500;
     letter-spacing: .12em; text-transform: uppercase; text-decoration: none; border-radius: 2px;
     transition: background .35s, transform .35s, box-shadow .35s;
@@ -67,12 +67,12 @@
 
   .btn-outline-dark {
     display: inline-flex; align-items: center; gap: 10px; padding: 15px 32px;
-    border: 1px solid rgba(37,74,52,.25); color: #254a34; background: transparent;
+    border: 1px solid rgba(21, 44, 68,.25); color: #152c44; background: transparent;
     font-family: 'DM Sans', system-ui, sans-serif; font-size: .78rem; font-weight: 500;
     letter-spacing: .12em; text-transform: uppercase; text-decoration: none; border-radius: 2px;
     transition: border-color .35s, background .35s, color .35s;
   }
-  .btn-outline-dark:hover { border-color: #c9a96e; background: #c9a96e; color: #254a34; }
+  .btn-outline-dark:hover { border-color: #c9a96e; background: #c9a96e; color: #152c44; }
 
   .btn-arrow { display: inline-block; transition: transform .35s; }
   .btn-primary:hover .btn-arrow,
@@ -98,7 +98,7 @@
 
   .section-title {
     font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400;
-    font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.15; color: #254a34;
+    font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.15; color: #152c44;
     letter-spacing: -.01em; margin-bottom: 16px; text-wrap: balance;
   }
   .section-title em { font-style: italic; color: #a8885a; }
@@ -108,8 +108,8 @@
     font-weight: 300; text-wrap: pretty;
   }
 
-  /* Dark-section recolor (cypress background) */
-  .dark-section { background: #254a34; }
+  /* Dark-section recolor (navy background) */
+  .dark-section { background: #152c44; }
   .dark-section .section-title { color: #faf8f4; }
   .dark-section .section-title em { color: #c9a96e; }
   .dark-section .section-intro { color: rgba(250,248,244,.5); }
@@ -118,7 +118,7 @@
 
   /* Compact interior-page hero (shorter than the home hero) */
   .page-hero {
-    position: relative; overflow: hidden; background: #254a34;
+    position: relative; overflow: hidden; background: #152c44;
     padding: 148px 5vw 80px; text-align: center;
   }
   .page-hero__grid {

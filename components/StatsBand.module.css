@@ -1,4 +1,4 @@
-.band { background: #254a34; padding: 56px 5vw; }
+.band { background: #152c44; padding: 56px 5vw; }
 .inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2px; }
 .stat { text-align: center; padding: 24px 16px; }
 .value {

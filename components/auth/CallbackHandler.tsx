@@ -153,7 +153,7 @@ export default function CallbackHandler() {
             <p style={{ fontSize: '.88rem', color: '#7a6e65', marginBottom: 28, lineHeight: 1.65 }}>
               Password reset links are valid for one hour. Please request a new one.
             </p>
-            <a href="/auth/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', background: '#254a34', color: '#faf8f4', fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: '.78rem', fontWeight: 500, letterSpacing: '.12em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: 2, transition: 'background .35s' }}>
+            <a href="/auth/login" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 28px', background: '#152c44', color: '#faf8f4', fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: '.78rem', fontWeight: 500, letterSpacing: '.12em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: 2, transition: 'background .35s' }}>
               Back to sign in &rarr;
             </a>
           </div>

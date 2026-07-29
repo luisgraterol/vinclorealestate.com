@@ -1,7 +1,7 @@
 .figure {
   position: relative;
   overflow: hidden;
-  background: #254a34;
+  background: #152c44;
   margin: 0;
 }
 
@@ -31,7 +31,7 @@
 .tint {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(37, 74, 52, 0.06), rgba(37, 74, 52, 0.18));
+  background: linear-gradient(180deg, rgba(21, 44, 68, 0.06), rgba(21, 44, 68, 0.18));
   mix-blend-mode: multiply;
   pointer-events: none;
 }
@@ -47,7 +47,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(250, 248, 244, 0.92);
-  text-shadow: 0 1px 8px rgba(17, 34, 25, 0.6);
+  text-shadow: 0 1px 8px rgba(8, 18, 29, 0.6);
 }
 
 @media (max-width: 700px) {

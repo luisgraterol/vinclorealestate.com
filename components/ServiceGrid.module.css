@@ -1,10 +1,10 @@
 .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; max-width: 1200px; margin: 0 auto; }
-.card { background: white; border: 1px solid rgba(37,74,52,.07); padding: 34px 32px; position: relative; transition: border-color .35s, box-shadow .35s, transform .35s; }
+.card { background: white; border: 1px solid rgba(21, 44, 68,.07); padding: 34px 32px; position: relative; transition: border-color .35s, box-shadow .35s, transform .35s; }
 .card::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: #c9a96e; transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.4,0,.2,1); }
-.card:hover { border-color: rgba(201,169,110,.3); box-shadow: 0 8px 32px rgba(37,74,52,.08); transform: translateY(-3px); }
+.card:hover { border-color: rgba(201,169,110,.3); box-shadow: 0 8px 32px rgba(21, 44, 68,.08); transform: translateY(-3px); }
 .card:hover::before { transform: scaleX(1); }
 .num { font-family: 'Cormorant Garamond', Georgia, serif; font-size: .8rem; letter-spacing: .12em; color: #a8885a; margin-bottom: 14px; }
-.name { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.35rem; font-weight: 500; color: #254a34; margin-bottom: 10px; letter-spacing: -.01em; }
+.name { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.35rem; font-weight: 500; color: #152c44; margin-bottom: 10px; letter-spacing: -.01em; }
 .desc { font-size: .9rem; color: #7a6e65; line-height: 1.7; font-weight: 300; text-wrap: pretty; }
 
 @media (max-width: 1024px) { .grid { grid-template-columns: 1fr 1fr; } }
