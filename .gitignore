@@ -30,3 +30,7 @@ playwright-report/
 # Raw design assets (curated/processed copies live in public/)
 Haven at The Gulch Photos/
 assets-src/
+
+# Internal strategy/planning docs (kept locally, not published)
+REDESIGN_PLAN.md
+cohosting.md
