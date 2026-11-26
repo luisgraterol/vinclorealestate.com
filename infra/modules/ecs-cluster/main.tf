@@ -25,7 +25,7 @@ resource "aws_sns_topic_subscription" "email" {
 
 resource "aws_cloudwatch_event_rule" "task_failed" {
   name        = "${var.cluster_name}-task-failed"
-  description = "Tareas ECS detenidas con exit code distinto de 0"
+  description = "Tareas ECS que terminan con exit code distinto de 0 o que no logran arrancar"
 
   event_pattern = jsonencode({
     source        = ["aws.ecs"]
@@ -33,9 +33,11 @@ resource "aws_cloudwatch_event_rule" "task_failed" {
     detail = {
       clusterArn = [aws_ecs_cluster.this.arn]
       lastStatus = ["STOPPED"]
-      containers = {
-        exitCode = [{ "anything-but" = 0 }]
-      }
+      "$or" = [
+        { containers = { exitCode = [{ "anything-but" = 0 }] } },
+        # p. ej. no pudo bajar la imagen: no hay exitCode
+        { stopCode = ["TaskFailedToStart"] },
+      ]
     }
   })
 }

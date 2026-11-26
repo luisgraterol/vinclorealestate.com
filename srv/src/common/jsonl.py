@@ -18,8 +18,8 @@ log = logging.getLogger(__name__)
 class RawWriter:
     """Escribe registros a un archivo temporal y lo sube a `key` al cerrar.
 
-    Si el job falla a la mitad, igual sube lo que alcanzó a extraer y deja pasar el error,
-    así la corrida queda marcada como fallida pero la data parcial no se pierde.
+    Si el job falla a la mitad, igual sube lo que alcanzó a extraer, pero como
+    `data.partial.jsonl`: así no se pierde y `normalize` no la confunde con una corrida completa.
     """
 
     def __init__(self, storage: Storage, key: str, job: str, run_id: str) -> None:
@@ -55,14 +55,20 @@ class RawWriter:
     ) -> None:
         self._tmp.close()
         path = Path(self._tmp.name)
+        key = self.key if exc_type is None else partial_key(self.key)
         try:
             if self.count:
-                self.uri = self.storage.put_file(path, self.key, "application/x-ndjson")
+                self.uri = self.storage.put_file(path, key, "application/x-ndjson")
                 log.info("subido %s (%d registros)", self.uri, self.count)
             else:
                 log.warning("sin registros; no se sube nada a %s", self.key)
         finally:
             path.unlink(missing_ok=True)
+
+
+def partial_key(key: str) -> str:
+    """raw/.../data.jsonl → raw/.../data.partial.jsonl"""
+    return key.removesuffix(".jsonl") + ".partial.jsonl"
 
 
 def read_records(storage: Storage, key: str) -> Iterator[dict]:

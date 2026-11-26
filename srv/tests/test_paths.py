@@ -30,6 +30,10 @@ def test_latest_raw_key_picks_newest_run_not_after_date(tmp_path):
     ]:
         write_raw(tmp_path, "job-a", d, run, [{"x": 1}])
     write_raw(tmp_path, "job-ab", "2026-12-01", "235959-eeeeee", [{"x": 1}])
+    # una corrida fallida (parcial) más reciente no cuenta
+    partial = tmp_path / "raw/job-a/date=2026-12-01/run=080000-ffffff/data.partial.jsonl"
+    partial.parent.mkdir(parents=True)
+    partial.write_text("{}\n")
     storage = LocalStorage(tmp_path)
     key = latest_raw_key(storage, "job-a", date(2026, 12, 1))
     assert key == "raw/job-a/date=2026-12-01/run=070000-cccccc/data.jsonl"
