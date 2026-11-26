@@ -1,0 +1,41 @@
+[project]
+name = "vinclo-srv"
+version = "0.1.0"
+description = "Vinclo backend services: ECS tasks for web extraction and normalization"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "playwright (>=1.65.2,<1.66)",
+    "boto3 (>=1.44,<2)",
+]
+
+[project.scripts]
+web-extractor = "tasks.web_extractor.main:main"
+normalize = "tasks.normalize.main:main"
+
+[tool.poetry]
+packages = [
+    { include = "common", from = "src" },
+    { include = "tasks", from = "src" },
+]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.2"
+ruff = "^0.17"
+moto = { version = "^5.2", extras = ["s3"] }
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
