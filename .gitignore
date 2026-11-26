@@ -34,3 +34,15 @@ assets-src/
 # Internal strategy/planning docs (kept locally, not published)
 REDESIGN_PLAN.md
 cohosting.md
+
+# srv (Python)
+srv/.venv/
+srv/out/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+
+# infra (Terraform / Terragrunt)
+.terraform/
+.terragrunt-cache/
+*.tfplan

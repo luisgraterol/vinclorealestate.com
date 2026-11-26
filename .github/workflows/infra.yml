@@ -1,0 +1,112 @@
+name: infra
+
+on:
+  pull_request:
+    branches: [main]
+    paths: ["infra/**", ".github/workflows/infra.yml"]
+  push:
+    branches: [main]
+    paths: ["infra/**", ".github/workflows/infra.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TF_VERSION: "1.17.2"
+  TG_VERSION: "1.2.3"
+  AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+  TG_NON_INTERACTIVE: "true"
+
+jobs:
+  fmt:
+    name: Formato
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          terraform_wrapper: false
+      - name: Instalar Terragrunt
+        run: |
+          curl -fsSL -o /usr/local/bin/terragrunt \
+            "https://github.com/gruntwork-io/terragrunt/releases/download/v${TG_VERSION}/terragrunt_linux_amd64"
+          chmod +x /usr/local/bin/terragrunt
+      - run: terraform fmt -check -recursive infra
+      - run: terragrunt hcl fmt --check --working-dir infra
+
+  plan:
+    name: Plan
+    needs: fmt
+    # Sin cuenta de AWS configurada todavía, solo corre el chequeo de formato.
+    if: github.event_name == 'pull_request' && vars.AWS_ACCOUNT_ID != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          terraform_wrapper: false
+      - name: Instalar Terragrunt
+        run: |
+          curl -fsSL -o /usr/local/bin/terragrunt \
+            "https://github.com/gruntwork-io/terragrunt/releases/download/v${TG_VERSION}/terragrunt_linux_amd64"
+          chmod +x /usr/local/bin/terragrunt
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/gha-infra-plan
+          aws-region: ${{ env.AWS_REGION }}
+      - name: terragrunt plan
+        working-directory: infra/live/prod/us-east-1
+        run: |
+          set -o pipefail
+          terragrunt run --all -- plan -no-color -lock-timeout=5m 2>&1 | tee "$RUNNER_TEMP/plan.txt"
+      - name: Comentar el plan en el PR
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          {
+            echo "### terragrunt plan"
+            echo '```'
+            tail -c 60000 "$RUNNER_TEMP/plan.txt" 2>/dev/null || echo "sin salida"
+            echo '```'
+          } > "$RUNNER_TEMP/comment.md"
+          gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/comment.md"
+
+  apply:
+    name: Apply
+    needs: fmt
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.AWS_ACCOUNT_ID != ''
+    runs-on: ubuntu-latest
+    environment: prod
+    concurrency:
+      group: infra-apply
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          terraform_wrapper: false
+      - name: Instalar Terragrunt
+        run: |
+          curl -fsSL -o /usr/local/bin/terragrunt \
+            "https://github.com/gruntwork-io/terragrunt/releases/download/v${TG_VERSION}/terragrunt_linux_amd64"
+          chmod +x /usr/local/bin/terragrunt
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/gha-infra-apply
+          aws-region: ${{ env.AWS_REGION }}
+      - name: terragrunt apply
+        working-directory: infra/live/prod/us-east-1
+        run: terragrunt run --all -- apply -auto-approve -lock-timeout=5m
