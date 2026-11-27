@@ -65,10 +65,10 @@ dependency "ecs_cluster" {
   config_path = "../ecs-cluster"
 
   mock_outputs = {
-    cluster_arn      = "arn:aws:ecs:us-east-1:000000000000:cluster/vinclo-srv"
-    cluster_name     = "vinclo-srv"
-    log_group_name   = "/ecs/vinclo-srv"
-    alerts_topic_arn = "arn:aws:sns:us-east-1:000000000000:vinclo-srv-alerts"
+    cluster_arn      = "arn:aws:ecs:us-east-1:000000000000:cluster/vinclo-cluster"
+    cluster_name     = "vinclo-cluster"
+    log_group_name   = "/ecs/vinclo-cluster"
+    alerts_topic_arn = "arn:aws:sns:us-east-1:000000000000:vinclo-cluster-alerts"
   }
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
 }

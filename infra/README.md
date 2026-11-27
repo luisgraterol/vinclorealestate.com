@@ -17,7 +17,7 @@ Infra de AWS (cuenta única, `us-east-1`) para el proyecto `srv/`: una imagen Do
 | `upstream-bucket` | `vinclo-upstream` (datos crudos `raw/`, transición a Glacier IR a los 90 días) |
 | `downstream-bucket` | `vinclo-downstream` (datos normalizados) |
 | `ecr-srv` | Repositorio ECR `srv` (tag móvil `prod`, conserva 20 imágenes) |
-| `ecs-cluster` | Cluster `vinclo-srv`, log group, SNS de alertas y regla EventBridge para tareas fallidas |
+| `ecs-cluster` | Cluster `vinclo-cluster`, log group, SNS de alertas y regla EventBridge para tareas fallidas |
 | `tasks` | Task definitions `web-extractor` y `normalize`, schedules, rol CI `gha-srv` y parámetro SSM `/vinclo/srv/run-task` |
 
 Los módulos están en `modules/`; `srv-tasks` compone `ecs-task` y `schedules`.
