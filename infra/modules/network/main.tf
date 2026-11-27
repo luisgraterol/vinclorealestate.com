@@ -51,11 +51,11 @@ resource "aws_route_table_association" "public" {
 
 # Sin ingress; todo el egress (las tareas salen por IP pública, sin NAT)
 resource "aws_security_group" "tasks" {
-  name        = "srv-tasks"
-  description = "Tareas ECS de srv: sin ingress, todo el egress"
+  name        = "vinclo-tasks"
+  description = "Tareas ECS de Vinclo: sin ingress, todo el egress"
   vpc_id      = aws_vpc.this.id
 
-  tags = { Name = "srv-tasks" }
+  tags = { Name = "vinclo-tasks" }
 }
 
 resource "aws_vpc_security_group_egress_rule" "all" {

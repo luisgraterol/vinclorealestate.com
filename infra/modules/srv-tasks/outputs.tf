@@ -9,7 +9,7 @@ output "normalize_task_definition_arn" {
 }
 
 output "gha_srv_role_arn" {
-  description = "ARN del rol de CI gha-srv."
+  description = "ARN del rol de CI gha-vinclo-tasks."
   value       = aws_iam_role.gha_srv.arn
 }
 

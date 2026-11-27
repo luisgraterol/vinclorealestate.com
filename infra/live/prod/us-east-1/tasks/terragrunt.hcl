@@ -50,13 +50,13 @@ dependency "downstream_bucket" {
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
 }
 
-dependency "ecr_srv" {
-  config_path = "../ecr-srv"
+dependency "ecr" {
+  config_path = "../ecr"
 
   mock_outputs = {
-    repository_url  = "000000000000.dkr.ecr.us-east-1.amazonaws.com/srv"
-    repository_arn  = "arn:aws:ecr:us-east-1:000000000000:repository/srv"
-    repository_name = "srv"
+    repository_url  = "000000000000.dkr.ecr.us-east-1.amazonaws.com/vinclo-tasks"
+    repository_arn  = "arn:aws:ecr:us-east-1:000000000000:repository/vinclo-tasks"
+    repository_name = "vinclo-tasks"
   }
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
 }
@@ -76,8 +76,8 @@ dependency "ecs_cluster" {
 inputs = {
   region             = "us-east-1"
   github_repo        = local.account.github_repo
-  image              = "${dependency.ecr_srv.outputs.repository_url}:prod"
-  ecr_repository_arn = dependency.ecr_srv.outputs.repository_arn
+  image              = "${dependency.ecr.outputs.repository_url}:prod"
+  ecr_repository_arn = dependency.ecr.outputs.repository_arn
   upstream_bucket    = dependency.upstream_bucket.outputs.bucket_name
   downstream_bucket  = dependency.downstream_bucket.outputs.bucket_name
   cluster_arn        = dependency.ecs_cluster.outputs.cluster_arn

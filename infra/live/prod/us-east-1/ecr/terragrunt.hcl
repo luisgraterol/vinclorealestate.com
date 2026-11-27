@@ -7,5 +7,5 @@ terraform {
 }
 
 inputs = {
-  name = "srv"
+  name = "vinclo-tasks"
 }
