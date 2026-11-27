@@ -5,7 +5,7 @@ locals {
 }
 
 resource "aws_scheduler_schedule_group" "srv" {
-  name = "srv"
+  name = "vinclo"
 }
 
 data "aws_iam_policy_document" "scheduler_trust" {
@@ -32,12 +32,12 @@ data "aws_iam_policy_document" "scheduler" {
 }
 
 resource "aws_iam_role" "scheduler" {
-  name               = "srv-scheduler"
+  name               = "vinclo-scheduler"
   assume_role_policy = data.aws_iam_policy_document.scheduler_trust.json
 }
 
 resource "aws_iam_role_policy" "scheduler" {
-  name   = "run-srv-tasks"
+  name   = "run-vinclo-tasks"
   role   = aws_iam_role.scheduler.id
   policy = data.aws_iam_policy_document.scheduler.json
 }

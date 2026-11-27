@@ -3,3 +3,5 @@
 [env]
 AWS_CONFIG_FILE = "{{env.HOME}}/.aws/vinclo-config"
 AWS_PROFILE = "vinclo"
+# Terragrunt 1.x prefiere OpenTofu si está instalado; aquí usamos Terraform (igual que CI).
+TG_TF_PATH = "terraform"

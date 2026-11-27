@@ -67,7 +67,7 @@ jobs:
         if: env.PUBLISH == 'true'
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/gha-srv
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/gha-vinclo-tasks
           aws-region: ${{ env.AWS_REGION }}
       - name: Login a ECR
         id: ecr
@@ -79,9 +79,9 @@ jobs:
           REGISTRY: ${{ steps.ecr.outputs.registry }}
         run: |
           if [ "$PUBLISH" = "true" ]; then
-            echo "tags=${REGISTRY}/srv:${GITHUB_SHA},${REGISTRY}/srv:prod" >> "$GITHUB_OUTPUT"
+            echo "tags=${REGISTRY}/vinclo-tasks:${GITHUB_SHA},${REGISTRY}/vinclo-tasks:prod" >> "$GITHUB_OUTPUT"
           else
-            echo "tags=srv:ci" >> "$GITHUB_OUTPUT"
+            echo "tags=vinclo-tasks:ci" >> "$GITHUB_OUTPUT"
           fi
       - uses: docker/build-push-action@v6
         with:
@@ -103,14 +103,14 @@ jobs:
     steps:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/gha-srv
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/gha-vinclo-tasks
           aws-region: ${{ env.AWS_REGION }}
       - name: aws ecs run-task
         env:
           TASK: ${{ inputs.task }}
           ARGS: ${{ inputs.args }}
         run: |
-          cfg=$(aws ssm get-parameter --name /vinclo/srv/run-task --query Parameter.Value --output text)
+          cfg=$(aws ssm get-parameter --name /vinclo/tasks/run-task --query Parameter.Value --output text)
           network=$(jq -c '{awsvpcConfiguration: {subnets: .subnets, securityGroups: .securityGroups, assignPublicIp: "ENABLED"}}' <<<"$cfg")
           overrides=$(jq -nc --arg t "$TASK" --arg a "$ARGS" \
             '{containerOverrides: [{name: "main", command: ([$t] + ($a | split(" ") | map(select(. != ""))))}]}')

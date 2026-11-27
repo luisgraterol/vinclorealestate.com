@@ -100,7 +100,7 @@ module "schedules" {
 
 # Parámetros para que CI lance tareas manualmente (aws ecs run-task)
 resource "aws_ssm_parameter" "run_task" {
-  name = "/vinclo/srv/run-task"
+  name = "/vinclo/tasks/run-task"
   type = "String"
   value = jsonencode({
     cluster        = var.cluster_name
@@ -128,7 +128,7 @@ data "aws_iam_policy_document" "gha_srv_trust" {
     condition {
       test     = "StringEquals"
       variable = "token.actions.githubusercontent.com:sub"
-      values   = ["repo:${var.github_repo}:ref:refs/heads/main"]
+      values   = ["${var.github_oidc_sub_prefix}:ref:refs/heads/main"]
     }
   }
 }
@@ -177,12 +177,12 @@ data "aws_iam_policy_document" "gha_srv" {
 }
 
 resource "aws_iam_role" "gha_srv" {
-  name               = "gha-srv"
+  name               = "gha-vinclo-tasks"
   assume_role_policy = data.aws_iam_policy_document.gha_srv_trust.json
 }
 
 resource "aws_iam_role_policy" "gha_srv" {
-  name   = "srv-ci"
+  name   = "vinclo-tasks-ci"
   role   = aws_iam_role.gha_srv.id
   policy = data.aws_iam_policy_document.gha_srv.json
 }

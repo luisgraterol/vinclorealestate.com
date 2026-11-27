@@ -11,6 +11,6 @@ locals {
 }
 
 inputs = {
-  cluster_name = "vinclo-srv"
+  cluster_name = "vinclo-cluster"
   alert_email  = local.account.alert_email
 }

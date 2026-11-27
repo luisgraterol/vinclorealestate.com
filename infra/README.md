@@ -13,12 +13,12 @@ Infra de AWS (cuenta única, `us-east-1`) para el proyecto `srv/`: una imagen Do
 | Stack | Qué crea |
 |---|---|
 | `github-oidc` | Proveedor OIDC de GitHub y roles `gha-infra-plan` (PR, solo lectura) y `gha-infra-apply` (environment `prod`, admin) |
-| `network` | VPC 10.20.0.0/16, 2 subredes públicas, IGW, security group `srv-tasks` (sin NAT) |
+| `network` | VPC 10.20.0.0/16, 2 subredes públicas, IGW, security group `vinclo-tasks` (sin NAT) |
 | `upstream-bucket` | `vinclo-upstream` (datos crudos `raw/`, transición a Glacier IR a los 90 días) |
 | `downstream-bucket` | `vinclo-downstream` (datos normalizados) |
-| `ecr-srv` | Repositorio ECR `srv` (tag móvil `prod`, conserva 20 imágenes) |
-| `ecs-cluster` | Cluster `vinclo-srv`, log group, SNS de alertas y regla EventBridge para tareas fallidas |
-| `tasks` | Task definitions `web-extractor` y `normalize`, schedules, rol CI `gha-srv` y parámetro SSM `/vinclo/srv/run-task` |
+| `ecr` | Repositorio ECR `vinclo-tasks` (tag móvil `prod`, conserva 20 imágenes) |
+| `ecs-cluster` | Cluster `vinclo-cluster`, log group, SNS de alertas y regla EventBridge para tareas fallidas |
+| `tasks` | Task definitions `web-extractor` y `normalize`, schedules, rol CI `gha-vinclo-tasks` y parámetro SSM `/vinclo/tasks/run-task` |
 
 Los módulos están en `modules/`; `srv-tasks` compone `ecs-task` y `schedules`.
 

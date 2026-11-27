@@ -9,6 +9,6 @@ output "public_subnet_ids" {
 }
 
 output "tasks_security_group_id" {
-  description = "ID del security group srv-tasks."
+  description = "ID del security group vinclo-tasks."
   value       = aws_security_group.tasks.id
 }

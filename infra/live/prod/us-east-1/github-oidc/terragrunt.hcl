@@ -11,5 +11,5 @@ locals {
 }
 
 inputs = {
-  github_repo = local.account.github_repo
+  github_oidc_sub_prefix = local.account.github_oidc_sub_prefix
 }

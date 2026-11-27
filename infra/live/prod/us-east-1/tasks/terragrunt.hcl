@@ -50,13 +50,13 @@ dependency "downstream_bucket" {
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
 }
 
-dependency "ecr_srv" {
-  config_path = "../ecr-srv"
+dependency "ecr" {
+  config_path = "../ecr"
 
   mock_outputs = {
-    repository_url  = "000000000000.dkr.ecr.us-east-1.amazonaws.com/srv"
-    repository_arn  = "arn:aws:ecr:us-east-1:000000000000:repository/srv"
-    repository_name = "srv"
+    repository_url  = "000000000000.dkr.ecr.us-east-1.amazonaws.com/vinclo-tasks"
+    repository_arn  = "arn:aws:ecr:us-east-1:000000000000:repository/vinclo-tasks"
+    repository_name = "vinclo-tasks"
   }
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
 }
@@ -65,27 +65,27 @@ dependency "ecs_cluster" {
   config_path = "../ecs-cluster"
 
   mock_outputs = {
-    cluster_arn      = "arn:aws:ecs:us-east-1:000000000000:cluster/vinclo-srv"
-    cluster_name     = "vinclo-srv"
-    log_group_name   = "/ecs/vinclo-srv"
-    alerts_topic_arn = "arn:aws:sns:us-east-1:000000000000:vinclo-srv-alerts"
+    cluster_arn      = "arn:aws:ecs:us-east-1:000000000000:cluster/vinclo-cluster"
+    cluster_name     = "vinclo-cluster"
+    log_group_name   = "/ecs/vinclo-cluster"
+    alerts_topic_arn = "arn:aws:sns:us-east-1:000000000000:vinclo-cluster-alerts"
   }
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
 }
 
 inputs = {
-  region             = "us-east-1"
-  github_repo        = local.account.github_repo
-  image              = "${dependency.ecr_srv.outputs.repository_url}:prod"
-  ecr_repository_arn = dependency.ecr_srv.outputs.repository_arn
-  upstream_bucket    = dependency.upstream_bucket.outputs.bucket_name
-  downstream_bucket  = dependency.downstream_bucket.outputs.bucket_name
-  cluster_arn        = dependency.ecs_cluster.outputs.cluster_arn
-  cluster_name       = dependency.ecs_cluster.outputs.cluster_name
-  log_group_name     = dependency.ecs_cluster.outputs.log_group_name
-  subnet_ids         = dependency.network.outputs.public_subnet_ids
-  security_group_id  = dependency.network.outputs.tasks_security_group_id
-  oidc_provider_arn  = dependency.github_oidc.outputs.oidc_provider_arn
+  region                 = "us-east-1"
+  github_oidc_sub_prefix = local.account.github_oidc_sub_prefix
+  image                  = "${dependency.ecr.outputs.repository_url}:prod"
+  ecr_repository_arn     = dependency.ecr.outputs.repository_arn
+  upstream_bucket        = dependency.upstream_bucket.outputs.bucket_name
+  downstream_bucket      = dependency.downstream_bucket.outputs.bucket_name
+  cluster_arn            = dependency.ecs_cluster.outputs.cluster_arn
+  cluster_name           = dependency.ecs_cluster.outputs.cluster_name
+  log_group_name         = dependency.ecs_cluster.outputs.log_group_name
+  subnet_ids             = dependency.network.outputs.public_subnet_ids
+  security_group_id      = dependency.network.outputs.tasks_security_group_id
+  oidc_provider_arn      = dependency.github_oidc.outputs.oidc_provider_arn
 
   # Para agregar un job nuevo: una línea aquí. El módulo envuelve cron en cron(...).
   schedules = {
