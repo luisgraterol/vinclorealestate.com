@@ -1,7 +1,7 @@
 locals {
-  # TODO: reemplazar con el ID real de la cuenta AWS
-  account_id = "000000000000"
-  # TODO: reemplazar con el correo real que recibe las alertas
-  alert_email = "aws@vinclorealestate.com"
+  # Cuenta AWS de Vinclo (alias "vinclo").
+  account_id = "599255610822"
+  # Recibe las alertas de tareas fallidas (SNS) — confirmar la suscripción por email.
+  alert_email = "lgraterol@vinclorealestate.com"
   github_repo = "luisgraterol/vinclorealestate.com"
 }

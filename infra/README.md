@@ -24,8 +24,9 @@ Los módulos están en `modules/`; `srv-tasks` compone `ecs-task` y `schedules`.
 
 ## Bootstrap (una sola vez)
 
-1. Reemplazar `account_id` y `alert_email` en `live/prod/account.hcl`.
-2. `aws sso login --profile vinclo`
+1. `live/prod/account.hcl` ya tiene la cuenta `599255610822` y el email de alertas.
+2. `aws sso login --profile vinclo`. El perfil vive en `~/.aws/vinclo-config`, separado de cualquier
+   otra config de AWS; `.mise.toml` exporta `AWS_CONFIG_FILE` y `AWS_PROFILE` solo dentro de este repo.
 3. Crear el bucket de estado `vinclo-tfstate`:
    ```sh
    cd infra/live/prod/us-east-1
