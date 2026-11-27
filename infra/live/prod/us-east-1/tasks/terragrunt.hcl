@@ -74,18 +74,18 @@ dependency "ecs_cluster" {
 }
 
 inputs = {
-  region             = "us-east-1"
-  github_repo        = local.account.github_repo
-  image              = "${dependency.ecr.outputs.repository_url}:prod"
-  ecr_repository_arn = dependency.ecr.outputs.repository_arn
-  upstream_bucket    = dependency.upstream_bucket.outputs.bucket_name
-  downstream_bucket  = dependency.downstream_bucket.outputs.bucket_name
-  cluster_arn        = dependency.ecs_cluster.outputs.cluster_arn
-  cluster_name       = dependency.ecs_cluster.outputs.cluster_name
-  log_group_name     = dependency.ecs_cluster.outputs.log_group_name
-  subnet_ids         = dependency.network.outputs.public_subnet_ids
-  security_group_id  = dependency.network.outputs.tasks_security_group_id
-  oidc_provider_arn  = dependency.github_oidc.outputs.oidc_provider_arn
+  region                 = "us-east-1"
+  github_oidc_sub_prefix = local.account.github_oidc_sub_prefix
+  image                  = "${dependency.ecr.outputs.repository_url}:prod"
+  ecr_repository_arn     = dependency.ecr.outputs.repository_arn
+  upstream_bucket        = dependency.upstream_bucket.outputs.bucket_name
+  downstream_bucket      = dependency.downstream_bucket.outputs.bucket_name
+  cluster_arn            = dependency.ecs_cluster.outputs.cluster_arn
+  cluster_name           = dependency.ecs_cluster.outputs.cluster_name
+  log_group_name         = dependency.ecs_cluster.outputs.log_group_name
+  subnet_ids             = dependency.network.outputs.public_subnet_ids
+  security_group_id      = dependency.network.outputs.tasks_security_group_id
+  oidc_provider_arn      = dependency.github_oidc.outputs.oidc_provider_arn
 
   # Para agregar un job nuevo: una línea aquí. El módulo envuelve cron en cron(...).
   schedules = {

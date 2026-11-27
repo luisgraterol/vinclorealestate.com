@@ -48,8 +48,8 @@ variable "oidc_provider_arn" {
   type        = string
 }
 
-variable "github_repo" {
-  description = "Repositorio de GitHub (owner/repo)."
+variable "github_oidc_sub_prefix" {
+  description = "Prefijo del claim sub de OIDC de GitHub, p. ej. repo:owner@id/repo@id."
   type        = string
 }
 
