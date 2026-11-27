@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)infra' ':(exclude)srv' ':(exclude).github' ':(exclude).tool-versions'",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)infra' ':(exclude)srv' ':(exclude).github' ':(exclude).tool-versions' ':(exclude).mise.toml'",
   "redirects": [
     { "source": "/admin.html", "destination": "/admin", "permanent": true },
     { "source": "/auth/login.html", "destination": "/auth/login", "permanent": true },

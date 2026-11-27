@@ -1,0 +1,5 @@
+# Variables solo para este repo (requiere `mise activate` en el shell).
+# Aíslan la AWS CLI de Vinclo del resto de la máquina (p. ej. la config de Bops).
+[env]
+AWS_CONFIG_FILE = "{{env.HOME}}/.aws/vinclo-config"
+AWS_PROFILE = "vinclo"
