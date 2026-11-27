@@ -18,6 +18,7 @@ env:
   AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
   TG_NON_INTERACTIVE: "true"
   TG_TF_PATH: terraform
+  TG_NO_COLOR: "true"
 
 jobs:
   fmt:
