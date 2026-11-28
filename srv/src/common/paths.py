@@ -9,11 +9,18 @@ from datetime import date, datetime
 from common.storage import Storage
 
 RAW_PREFIX = "raw"
-# Downstream layout. Parquet lives under a dedicated, Hive-partitioned prefix so a Glue crawler
-# pointed at s3://<downstream>/athena/ maps one table per dataset, partitioned by date. The CSV
-# export for humans lives under a separate prefix so it never confuses that crawler.
-ATHENA_PREFIX = "athena"
+# Downstream layout. Curated Parquet tables live under `curated/`, Hive-partitioned by
+# year/month/day, so a Glue crawler maps one table per dataset and any service (Athena, Spark,
+# a notebook) can consume them. CSV copies for people live under `exports/`, which is not crawled:
+# a partitioned copy per run, plus a stable `<dataset>-latest.csv` that always points at the
+# newest run so there is one obvious file to open.
+CURATED_PREFIX = "curated"
 EXPORTS_PREFIX = "exports"
+
+
+def _partition(run_date: date) -> str:
+    return f"year={run_date:%Y}/month={run_date:%m}/day={run_date:%d}"
+
 
 _RAW_KEY = re.compile(
     r"^raw/(?P<job>[^/]+)/date=(?P<date>\d{4}-\d{2}-\d{2})/run=(?P<run>[^/]+)/data\.jsonl$"
@@ -29,14 +36,19 @@ def raw_key(job: str, run_date: date, run_id: str) -> str:
     return f"{RAW_PREFIX}/{job}/date={run_date.isoformat()}/run={run_id}/data.jsonl"
 
 
-def athena_key(dataset: str, run_date: date) -> str:
-    """Partitioned Parquet path for the Glue/Athena table."""
-    return f"{ATHENA_PREFIX}/{dataset}/date={run_date.isoformat()}/{dataset}.parquet"
+def curated_key(dataset: str, run_date: date) -> str:
+    """Partitioned Parquet path for the crawled table (year/month/day partitions)."""
+    return f"{CURATED_PREFIX}/{dataset}/{_partition(run_date)}/{dataset}.parquet"
 
 
 def export_key(dataset: str, run_date: date) -> str:
-    """Human-readable CSV export path (outside the crawled prefix)."""
-    return f"{EXPORTS_PREFIX}/{dataset}/date={run_date.isoformat()}/{dataset}.csv"
+    """Partitioned CSV copy for people (outside the crawled prefix)."""
+    return f"{EXPORTS_PREFIX}/{dataset}/{_partition(run_date)}/{dataset}.csv"
+
+
+def latest_export_key(dataset: str) -> str:
+    """Stable CSV path that always holds the newest run: the one file to open."""
+    return f"{EXPORTS_PREFIX}/{dataset}/{dataset}-latest.csv"
 
 
 def latest_raw_key(storage: Storage, job: str, on_or_before: date) -> str | None:

@@ -16,7 +16,7 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 
 from common.logs import setup_logging
-from common.paths import athena_key, export_key
+from common.paths import curated_key, export_key, latest_export_key
 from common.storage import Storage, storage_from_uri
 from tasks.normalize.registry import all_datasets
 
@@ -75,10 +75,12 @@ def run(dataset: str, upstream_uri: str, downstream_uri: str, run_date: date | N
         _write_parquet(parquet, columns, rows)
         _write_csv(csv_file, columns, rows)
         table_uri = downstream.put_file(
-            parquet, athena_key(dataset, run_date), "application/x-parquet"
+            parquet, curated_key(dataset, run_date), "application/x-parquet"
         )
-        csv_uri = downstream.put_file(csv_file, export_key(dataset, run_date), "text/csv")
-    log.info("done: %d rows -> %s and %s", len(rows), table_uri, csv_uri)
+        downstream.put_file(csv_file, export_key(dataset, run_date), "text/csv")
+        # Stable copy so there is always one obvious file to open.
+        latest_uri = downstream.put_file(csv_file, latest_export_key(dataset), "text/csv")
+    log.info("done: %d rows -> %s (table) and %s (latest csv)", len(rows), table_uri, latest_uri)
     return 0
 
 

@@ -1,6 +1,13 @@
 from datetime import date, datetime
 
-from common.paths import athena_key, export_key, latest_raw_key, new_run_id, raw_key
+from common.paths import (
+    curated_key,
+    export_key,
+    latest_export_key,
+    latest_raw_key,
+    new_run_id,
+    raw_key,
+)
 from common.storage import LocalStorage
 from conftest import write_raw
 
@@ -10,12 +17,19 @@ def test_raw_key_uses_date_partition():
     assert key == "raw/job-a/date=2026-12-01/run=120000-abc123/data.jsonl"
 
 
-def test_athena_key_is_partitioned_parquet():
-    assert athena_key("leads", date(2026, 12, 1)) == "athena/leads/date=2026-12-01/leads.parquet"
+def test_curated_key_is_ymd_partitioned_parquet():
+    assert (
+        curated_key("leads", date(2026, 12, 1))
+        == "curated/leads/year=2026/month=12/day=01/leads.parquet"
+    )
 
 
-def test_export_key_is_separate_csv_prefix():
-    assert export_key("leads", date(2026, 12, 1)) == "exports/leads/date=2026-12-01/leads.csv"
+def test_export_keys():
+    assert (
+        export_key("leads", date(2026, 12, 1))
+        == "exports/leads/year=2026/month=12/day=01/leads.csv"
+    )
+    assert latest_export_key("leads") == "exports/leads/leads-latest.csv"
 
 
 def test_run_id_sorts_by_time():

@@ -66,9 +66,10 @@ def test_run_writes_parquet_and_csv(tmp_path):
     code = cli.run("leads", str(up), str(down), RUN)
     assert code == 0
 
-    parquet = down / "athena/leads/date=2026-12-01/leads.parquet"
-    csv = down / "exports/leads/date=2026-12-01/leads.csv"
-    assert parquet.exists() and csv.exists()
+    parquet = down / "curated/leads/year=2026/month=12/day=01/leads.parquet"
+    csv = down / "exports/leads/year=2026/month=12/day=01/leads.csv"
+    latest = down / "exports/leads/leads-latest.csv"
+    assert parquet.exists() and csv.exists() and latest.exists()
 
     table = pq.read_table(parquet)
     assert table.num_rows == 1
