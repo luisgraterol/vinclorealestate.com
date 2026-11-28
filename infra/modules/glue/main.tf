@@ -3,8 +3,7 @@
 # sync with the year/month/day partitions each run writes.
 
 locals {
-  bucket_arn   = "arn:aws:s3:::${var.downstream_bucket}"
-  curated_path = "s3://${var.downstream_bucket}/${var.curated_prefix}/"
+  bucket_arn = "arn:aws:s3:::${var.downstream_bucket}"
 }
 
 resource "aws_glue_catalog_database" "this" {
@@ -60,11 +59,15 @@ resource "aws_glue_crawler" "curated" {
   database_name = aws_glue_catalog_database.this.name
   schedule      = var.crawler_schedule
 
-  s3_target {
-    path = local.curated_path
+  # One target per dataset folder, so each becomes its own table (vinclo.leads) with the
+  # year/month/day folders as partitions, rather than a single table for the whole prefix.
+  dynamic "s3_target" {
+    for_each = var.datasets
+    content {
+      path = "s3://${var.downstream_bucket}/${var.curated_prefix}/${s3_target.value}/"
+    }
   }
 
-  # Keep partitions in sync and let each dataset folder become its own table.
   recrawl_policy {
     recrawl_behavior = "CRAWL_EVERYTHING"
   }
@@ -72,12 +75,6 @@ resource "aws_glue_crawler" "curated" {
     update_behavior = "UPDATE_IN_DATABASE"
     delete_behavior = "LOG"
   }
-  configuration = jsonencode({
-    Version = 1.0
-    Grouping = {
-      TableGroupingPolicy = "CombineCompatibleSchemas"
-    }
-  })
 }
 
 resource "aws_athena_workgroup" "this" {

@@ -14,6 +14,12 @@ variable "curated_prefix" {
   default     = "curated"
 }
 
+variable "datasets" {
+  description = "Curated dataset folders to catalog; one table each."
+  type        = list(string)
+  default     = ["leads"]
+}
+
 variable "athena_results_prefix" {
   description = "Prefix under the bucket where Athena writes query results."
   type        = string
