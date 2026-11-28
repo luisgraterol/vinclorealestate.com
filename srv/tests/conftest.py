@@ -19,21 +19,35 @@ class FakeResponse:
 
 
 class FakeContext:
-    """Imita JobContext: responde GETs desde una función, sin red ni navegador."""
+    """Stands in for JobContext: answers get/post from a handler, no network or browser.
 
-    def __init__(self, handler):
+    `raw` optionally maps a job name to the records `read_latest_raw` should return, so jobs
+    that enrich a previous job's output can be tested without real storage.
+    """
+
+    def __init__(self, handler, raw=None):
         self.handler = handler
+        self.raw = raw or {}
         self.calls = []
+        self.upstream = None
+        self.run_date = None
 
     def get(self, url, *, params=None, **_):
         self.calls.append((url, params))
         return self.handler(url, params)
 
+    def post(self, url, *, form=None, **_):
+        self.calls.append((url, form))
+        return self.handler(url, form)
+
+    def read_latest_raw(self, job_name):
+        yield from self.raw.get(job_name, [])
+
 
 @pytest.fixture
 def fake_context_factory():
-    def make(handler):
-        ctx = FakeContext(handler)
+    def make(handler, raw=None):
+        ctx = FakeContext(handler, raw)
 
         @contextmanager
         def factory():

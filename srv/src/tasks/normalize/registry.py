@@ -1,4 +1,4 @@
-"""Registro de datasets disponibles para `normalize --dataset <nombre>`."""
+"""Registry of datasets available for `normalize --dataset <name>`."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from datetime import date
 
 from common.storage import Storage
 
-# Un dataset recibe el storage de upstream y la fecha, y devuelve (columnas, filas).
+# A dataset receives the upstream storage and the date, and returns (columns, rows).
 Builder = Callable[[Storage, date], tuple[list[str], list[dict[str, str]]]]
 DATASETS: dict[str, Builder] = {}
 
@@ -23,6 +23,6 @@ def register(name: str) -> Callable[[Builder], Builder]:
 
 
 def all_datasets() -> dict[str, Builder]:
-    import tasks.normalize.datasets  # noqa: F401  (registra los datasets)
+    import tasks.normalize.datasets  # noqa: F401  (registers the datasets)
 
     return dict(sorted(DATASETS.items()))

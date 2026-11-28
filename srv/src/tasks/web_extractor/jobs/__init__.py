@@ -1,3 +1,8 @@
-"""Importar aquí cada módulo de job para que quede registrado."""
+"""Import each job module here so it registers itself."""
 
-from tasks.web_extractor.jobs import dbpr_fl_lodging, nashville_str_permits  # noqa: F401
+from tasks.web_extractor.jobs import (  # noqa: F401
+    dbpr_fl_lodging,
+    miami_dade_parcels,
+    nashville_str_permits,
+    sunbiz_fl,
+)

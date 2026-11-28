@@ -88,9 +88,13 @@ inputs = {
   oidc_provider_arn      = dependency.github_oidc.outputs.oidc_provider_arn
 
   # Para agregar un job nuevo: una línea aquí. El módulo envuelve cron en cron(...).
+  # Ordered by time so each job's inputs exist before it runs: raw sources first, then the
+  # county enrichment that reads DBPR, then normalize. Sunbiz is heavy and only enriches names.
   schedules = {
     nashville-str-permits = { task = "web-extractor", cron = "0 6 ? * MON *", command = ["web-extractor", "--job", "nashville-str-permits"] }
     dbpr-fl-lodging       = { task = "web-extractor", cron = "0 6 ? * MON *", command = ["web-extractor", "--job", "dbpr-fl-lodging"] }
+    sunbiz-fl             = { task = "web-extractor", cron = "0 5 ? * MON *", command = ["web-extractor", "--job", "sunbiz-fl"] }
+    miami-dade-parcels    = { task = "web-extractor", cron = "0 7 ? * MON *", command = ["web-extractor", "--job", "miami-dade-parcels"] }
     leads                 = { task = "normalize", cron = "0 10 ? * MON *", command = ["normalize", "--dataset", "leads"] }
   }
 }

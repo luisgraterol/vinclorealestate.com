@@ -1,7 +1,7 @@
-"""Permisos de short-term rental de Nashville (Metro Codes), vía ArcGIS FeatureServer.
+"""Nashville short-term rental permits (Metro Codes), via ArcGIS FeatureServer.
 
 Dataset: https://datanashvillegov-nashville.hub.arcgis.com/datasets/b5315bda43ac459281dd35f04aa1be32_0
-Trae dueño del permiso y su mailing address, dirección de la propiedad, parcela y estado.
+Includes the permit owner and their mailing address, property address, parcel and status.
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ SERVICE = (
     "https://services2.arcgis.com/HdTo6HJqh92wn4D8/arcgis/rest/services/"
     "Residential_Short_Term_Rental_Permits_view/FeatureServer/0"
 )
-PAGE_SIZE = 1000  # maxRecordCount del servicio
+PAGE_SIZE = 1000  # service's maxRecordCount
 
 
 def permit_url(permit: str) -> str:
@@ -27,7 +27,7 @@ def permit_url(permit: str) -> str:
 @register
 class NashvilleStrPermits:
     name = "nashville-str-permits"
-    description = "Permisos STR de Nashville (ArcGIS, ~17k registros)"
+    description = "Nashville STR permits (ArcGIS, ~17k records)"
 
     def extract(self, ctx: JobContext) -> Iterator[Item]:
         offset = 0
@@ -45,7 +45,7 @@ class NashvilleStrPermits:
                 },
             ).json()
             if "error" in body:
-                raise RuntimeError(f"ArcGIS devolvió error: {body['error']}")
+                raise RuntimeError(f"ArcGIS error: {body['error']}")
             features = body.get("features", [])
             for feature in features:
                 attrs = feature["attributes"]

@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "normalize" {
 
   statement {
     actions   = ["s3:PutObject"]
-    resources = ["${local.downstream_arn}/normalized/*"]
+    resources = ["${local.downstream_arn}/curated/*", "${local.downstream_arn}/exports/*"]
   }
 }
 

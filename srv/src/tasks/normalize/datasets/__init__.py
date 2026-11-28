@@ -1,3 +1,3 @@
-"""Importar aquí cada módulo de dataset para que quede registrado."""
+"""Import each dataset module here so it registers itself."""
 
 from tasks.normalize.datasets import leads  # noqa: F401
