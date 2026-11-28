@@ -1,1 +1,1 @@
-"""Código compartido por todos los tasks de srv."""
+"""Code shared by all srv tasks."""

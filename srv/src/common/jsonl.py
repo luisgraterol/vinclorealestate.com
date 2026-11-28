@@ -1,4 +1,4 @@
-"""Escritura y lectura de archivos JSONL (un registro JSON por línea)."""
+"""Reading and writing JSONL files (one JSON record per line)."""
 
 from __future__ import annotations
 
@@ -16,10 +16,11 @@ log = logging.getLogger(__name__)
 
 
 class RawWriter:
-    """Escribe registros a un archivo temporal y lo sube a `key` al cerrar.
+    """Write records to a temporary file and upload it to `key` on close.
 
-    Si el job falla a la mitad, igual sube lo que alcanzó a extraer, pero como
-    `data.partial.jsonl`: así no se pierde y `normalize` no la confunde con una corrida completa.
+    If the job fails midway, it still uploads whatever it managed to extract, but as
+    `data.partial.jsonl`: that way nothing is lost and `normalize` does not mistake it for a
+    complete run.
     """
 
     def __init__(self, storage: Storage, key: str, job: str, run_id: str) -> None:
@@ -29,7 +30,7 @@ class RawWriter:
         self.run_id = run_id
         self.count = 0
         self.uri: str | None = None
-        self._tmp = tempfile.NamedTemporaryFile(  # noqa: SIM115 (se cierra en __exit__)
+        self._tmp = tempfile.NamedTemporaryFile(  # noqa: SIM115 (closed in __exit__)
             "w", encoding="utf-8", suffix=".jsonl", delete=False
         )
 
@@ -59,9 +60,9 @@ class RawWriter:
         try:
             if self.count:
                 self.uri = self.storage.put_file(path, key, "application/x-ndjson")
-                log.info("subido %s (%d registros)", self.uri, self.count)
+                log.info("uploaded %s (%d records)", self.uri, self.count)
             else:
-                log.warning("sin registros; no se sube nada a %s", self.key)
+                log.warning("no records; nothing uploaded to %s", self.key)
         finally:
             path.unlink(missing_ok=True)
 

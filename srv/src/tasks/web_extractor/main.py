@@ -1,4 +1,4 @@
-"""CLI del task `web-extractor`: corre un job y deja su data cruda en upstream."""
+"""CLI for the `web-extractor` task: runs a job and leaves its raw data in upstream."""
 
 from __future__ import annotations
 
@@ -20,13 +20,13 @@ log = logging.getLogger("web-extractor")
 
 def parse_args(argv: list[str] | None) -> argparse.Namespace:
     p = argparse.ArgumentParser(prog="web-extractor", description=__doc__)
-    p.add_argument("--job", help="nombre del job a correr")
-    p.add_argument("--list", action="store_true", help="lista los jobs disponibles")
-    p.add_argument("--date", type=date.fromisoformat, help="fecha de la corrida (UTC por defecto)")
+    p.add_argument("--job", help="job to run")
+    p.add_argument("--list", action="store_true", help="list the available jobs")
+    p.add_argument("--date", type=date.fromisoformat, help="run date (UTC by default)")
     p.add_argument(
         "--upstream",
         default=os.environ.get("UPSTREAM_URI"),
-        help="s3://bucket o carpeta local (por defecto $UPSTREAM_URI)",
+        help="s3://bucket or local folder (defaults to $UPSTREAM_URI)",
     )
     args = p.parse_args(argv)
     if not args.list and not args.job:
@@ -45,16 +45,18 @@ def run(
     run_id = new_run_id(now)
     key = raw_key(job.name, run_date, run_id)
     storage = storage_from_uri(upstream_uri)
-    log.info("job=%s run_id=%s destino=%s/%s", job.name, run_id, storage.uri, key)
+    log.info("job=%s run_id=%s destination=%s/%s", job.name, run_id, storage.uri, key)
 
     with RawWriter(storage, key, job.name, run_id) as writer, context_factory() as ctx:
+        ctx.upstream = storage
+        ctx.run_date = run_date
         for item in job.extract(ctx):
             writer.write(item.source_url, item.data)
 
     if writer.count == 0:
-        log.error("el job %s no devolvió registros", job.name)
+        log.error("job %s returned no records", job.name)
         return 2
-    log.info("listo: %d registros", writer.count)
+    log.info("done: %d records", writer.count)
     return 0
 
 

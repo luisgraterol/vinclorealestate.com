@@ -1,4 +1,4 @@
-"""Almacenamiento de objetos: S3 en producción, una carpeta local para desarrollo."""
+"""Object storage: S3 in production, a local folder for development."""
 
 from __future__ import annotations
 
@@ -12,13 +12,13 @@ class Storage(Protocol):
     uri: str
 
     def put_file(self, local_path: Path, key: str, content_type: str) -> str:
-        """Sube un archivo y devuelve su URI completa."""
+        """Upload a file and return its full URI."""
 
     def list_keys(self, prefix: str) -> list[str]:
-        """Lista las keys que empiezan con `prefix`, ordenadas."""
+        """List the keys that start with `prefix`, sorted."""
 
     def read_bytes(self, key: str) -> bytes:
-        """Lee el contenido completo de una key."""
+        """Read the full contents of a key."""
 
 
 class LocalStorage:
@@ -74,14 +74,14 @@ class S3Storage:
 
 
 def storage_from_uri(uri: str) -> Storage:
-    """`s3://bucket` → S3Storage; cualquier otra cosa se trata como carpeta local."""
+    """`s3://bucket` → S3Storage; anything else is treated as a local folder."""
     parsed = urlparse(uri)
     if parsed.scheme == "s3":
         if not parsed.netloc or parsed.path.strip("/"):
-            raise ValueError(f"Usa solo el bucket, sin prefijo: {uri!r}")
+            raise ValueError(f"use only the bucket, no prefix: {uri!r}")
         return S3Storage(parsed.netloc)
     if parsed.scheme == "file":
         return LocalStorage(Path(parsed.path))
     if parsed.scheme:
-        raise ValueError(f"Esquema no soportado: {uri!r}")
+        raise ValueError(f"unsupported scheme: {uri!r}")
     return LocalStorage(Path(uri))

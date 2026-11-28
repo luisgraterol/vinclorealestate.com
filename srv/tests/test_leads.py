@@ -1,58 +1,105 @@
-import csv
 from datetime import date
 
+from common.storage import LocalStorage
 from conftest import write_raw
-from tasks.normalize import main as cli
-from tasks.normalize.datasets.leads import COLUMNS, is_entity
+from tasks.normalize.datasets.leads import COLUMNS, build
 
 RUN = date(2026, 12, 1)
+DBPR_URL = "https://www2.myfloridalicense.com/sto/file_download/extracts/hrlodge1.csv"
 
 
 def dbpr(
-    name,
-    city="MIAMI",
-    mailing_city="NEW YORK",
-    mailing_state="NY",
-    units="1",
+    licensee,
+    street,
+    unit="",
+    *,
     type_code="2006",
     county="Dade",
-    expiry="10/01/2027",
-    street="100 OCEAN DR",
+    city="MIAMI BEACH",
+    expiry="12/31/2030",
+    phone="3055551234",
 ):
     return {
-        "source_url": "https://www2.myfloridalicense.com/sto/file_download/extracts/hrlodge1.csv",
+        "source_url": DBPR_URL,
         "data": {
             "License Type Code": type_code,
-            "Licensee Name": name,
-            "Mailing Name": "",
-            "Mailing Street Address": "1 MAIN ST",
-            "Mailing City": mailing_city,
-            "Mailing State Code": mailing_state,
-            "Mailing Zip Code": "10001",
-            "Location Street Address": street,
-            "Location City": city,
-            "Location State Code": "FL",
-            "Location Zip Code": "331394209",
+            "Licensee Name": licensee,
             "Location County": county,
+            "Location Street Address": street,
+            "Location Address Line 2": unit,
+            "Location City": city,
+            "Location Zip Code": "33139",
             "License Expiry Date": expiry,
-            "Number of Seats or Rental Units": units,
+            "Primary Phone Number": phone,
+            "Secondary Phone Number": phone,
         },
     }
 
 
-def nash(owner, subtype="CAZ10A003", status="ISSUED", owner_city="ATLANTA", owner_state="GA"):
+def parcel(
+    folio,
+    street,
+    unit,
+    owner,
+    *,
+    beds=2,
+    baths=2,
+    dor="RESIDENTIAL - CONDOMINIUM",
+    mail_city="NEW YORK",
+    site_city="MIAMI BEACH",
+):
     return {
-        "source_url": "https://services2.arcgis.com/x/query?where=Permit__%3D%271%27",
+        "source_url": f"county?FOLIO={folio}",
+        "data": {
+            "FOLIO": folio,
+            "TRUE_SITE_ADDR_NO_UNIT": street,
+            "TRUE_SITE_UNIT": unit,
+            "TRUE_SITE_CITY": site_city,
+            "TRUE_SITE_ZIP_CODE": "33139-0000",
+            "TRUE_MAILING_ADDR1": "1 MAIN ST",
+            "TRUE_MAILING_CITY": mail_city,
+            "TRUE_MAILING_STATE": "NY",
+            "TRUE_MAILING_ZIP_CODE": "10001",
+            "TRUE_OWNER1": owner,
+            "BEDROOM_COUNT": beds,
+            "BATHROOM_COUNT": baths,
+            "HALF_BATHROOM_COUNT": 0,
+            "DOR_DESC": dor,
+        },
+    }
+
+
+def sunbiz(name, officer_name):
+    return {
+        "source_url": "sftp://sunbiz",
+        "data": {
+            "name": name,
+            "officers": [
+                {
+                    "title": "MGR",
+                    "name": officer_name,
+                    "address": "",
+                    "city": "",
+                    "state": "",
+                    "zip": "",
+                }
+            ],
+        },
+    }
+
+
+def nash(owner, subtype="CAZ10A003"):
+    return {
+        "source_url": "https://services2.arcgis.com/x/query",
         "data": {
             "Permit__": "1",
-            "Permit_Status": status,
+            "Permit_Status": "ISSUED",
             "Permit_SubType": subtype,
-            "Expiration_Date": 1807056000000,
+            "Expiration_Date": 1900000000000,
             "Permit_Owner_Name": owner,
-            "Permit_Owner_Addr1": None,
             "Permit_Owner_Addr2": "5 PEACH ST",
-            "Permit_Owner_City": owner_city,
-            "Permit_Owner_State": owner_state,
+            "Permit_Owner_City": "ATLANTA",
+            "Permit_Owner_State": "GA",
             "Permit_Owner_Zip": "30301",
             "Address": "1029 DELMAS AVE",
             "City": "NASHVILLE",
@@ -62,62 +109,135 @@ def nash(owner, subtype="CAZ10A003", status="ISSUED", owner_city="ATLANTA", owne
     }
 
 
-def build(tmp_path, dbpr_records, nash_records):
-    up, down = tmp_path / "up", tmp_path / "down"
-    write_raw(up, "dbpr-fl-lodging", RUN, "060000-aaaaaa", dbpr_records)
-    write_raw(up, "nashville-str-permits", RUN, "060000-bbbbbb", nash_records)
-    code = cli.run("leads", str(up), str(down), RUN)
-    path = down / f"normalized/leads/date={RUN}/leads.csv"
-    rows = list(csv.DictReader(path.open())) if path.exists() else []
-    return code, rows
+def build_leads(tmp_path, dbpr_rows, parcels, sunbiz_rows=(), nash_rows=()):
+    up = tmp_path
+    write_raw(up, "dbpr-fl-lodging", RUN, "060000-aaaaaa", dbpr_rows)
+    write_raw(up, "miami-dade-parcels", RUN, "060000-bbbbbb", parcels)
+    if sunbiz_rows:
+        write_raw(up, "sunbiz-fl", RUN, "060000-cccccc", sunbiz_rows)
+    if nash_rows:
+        write_raw(up, "nashville-str-permits", RUN, "060000-dddddd", nash_rows)
+    columns, rows = build(LocalStorage(up), RUN)
+    assert columns == COLUMNS
+    return rows
 
 
-def test_leads_applies_spec_filters(tmp_path):
-    code, rows = build(
+def by_owner(rows, name):
+    return next(r for r in rows if r["Owner name (source)"] == name)
+
+
+def test_miami_join_applies_spec_filters(tmp_path):
+    big = [dbpr("BIG LLC", f"{n}0 WEST AVE", "UNIT 1") for n in range(1, 7)]
+    big_parcels = [parcel(f"B{n}", f"{n}0 WEST AVE", "1", "BIG LLC") for n in range(1, 7)]
+    rows = build_leads(
         tmp_path,
-        [
-            dbpr("SUN LLC"),  # entra
-            dbpr("LOCAL OWNER", mailing_city="MIAMI", mailing_state="FL"),  # vive cerca
-            dbpr("BIG CO LLC", units="6"),  # > 5 unidades
-            dbpr("HOTEL INC", type_code="2001"),  # no es vacation rental
-            dbpr("KEYS LLC", county="Monroe"),  # fuera de Miami-Dade
-            dbpr("OLD LLC", expiry="10/01/2026"),  # licencia vencida
+        dbpr_rows=[
+            dbpr("SUN LLC", "100 OCEAN DR", "UNIT 5"),  # match + entity
+            dbpr("CARLOS GOMEZ", "200 PALM AVE", type_code="2007", city="MIAMI"),  # dwelling
+            dbpr("FISHER ISLAND CLUB INC", "1 FISHER ISLAND DR", "UNIT 101"),  # licensed to owner
+            dbpr("AMB LLC", "300 BAY RD", "UNIT 2"),  # ambiguous parcel
+            dbpr("HOTEL LLC", "400 COLLINS AVE", "UNIT 1"),  # non-residential
+            dbpr("OLD LLC", "500 WEST AVE", "UNIT 9", expiry="01/01/2020"),  # expired
+            dbpr("MONROE LLC", "1 KEY RD", county="Monroe"),  # outside Dade
+            *big,  # 6 units -> dropped
         ],
+        parcels=[
+            parcel("F1", "100 OCEAN DR", "5", "SUN LLC"),
+            parcel(
+                "F2",
+                "200 PALM AVE",
+                "",
+                "CARLOS GOMEZ",
+                dor="RESIDENTIAL - SINGLE FAMILY",
+                site_city="MIAMI",
+                mail_city="HOUSTON",
+            ),
+            parcel("F3", "1 FISHER ISLAND DR", "101", "JANE SMITH", mail_city="MIAMI BEACH"),
+            parcel("F4A", "300 BAY RD", "2", "OWNER A"),
+            parcel("F4B", "300 BAY RD", "2", "OWNER B"),  # same key -> ambiguous
+            parcel("F5", "400 COLLINS AVE", "1", "HOTEL LLC", dor="HOTEL OR MOTEL : HOTEL"),
+            parcel("F6", "500 WEST AVE", "9", "OLD LLC"),
+            *big_parcels,
+        ],
+        sunbiz_rows=[sunbiz("SUN LLC", "JOHN DOE")],
+    )
+    owners = {r["Owner name (source)"] for r in rows if r["Market"] == "miami"}
+    assert owners == {"SUN LLC", "CARLOS GOMEZ", "JANE SMITH"}
+
+
+def test_miami_entity_row_with_officer(tmp_path):
+    rows = build_leads(
+        tmp_path,
+        [dbpr("SUN LLC", "100 OCEAN DR", "UNIT 5")],
+        [parcel("F1", "100 OCEAN DR", "5", "SUN LLC", beds=2, baths=2)],
+        sunbiz_rows=[sunbiz("SUN LLC", "JOHN DOE")],
+    )
+    r = by_owner(rows, "SUN LLC")
+    assert r["Market"] == "miami"
+    assert r["Entity"] == "SUN LLC"
+    assert (r["First name"], r["Last name"]) == ("John", "Doe")
+    assert r["Bedrooms"] == "2" and r["Bathrooms"] == "2"
+    assert r["Phone"] == "3055551234"  # not duplicated
+    assert r["Lives far?"] == "Yes"
+    assert r["Ownership check"] == "Matches"
+    assert r["Licence signal"] == "Self-licensed"
+    assert r["Tier"] == "A"
+    assert r["Units owned"] == "1"
+    assert DBPR_URL in r["Source URLs"] and "county?FOLIO=F1" in r["Source URLs"]
+
+
+def test_miami_individual_owner_splits_name(tmp_path):
+    rows = build_leads(
+        tmp_path,
+        [dbpr("CARLOS GOMEZ", "200 PALM AVE", type_code="2007", city="MIAMI")],
         [
-            nash("SMITH, JOHN"),  # entra
-            nash("HOME, OWNER", subtype="CAZ10A001"),  # owner occupied
-            nash("DENIED, X", status="DENIED-D"),  # no emitido
+            parcel(
+                "F2",
+                "200 PALM AVE",
+                "",
+                "CARLOS GOMEZ",
+                dor="RESIDENTIAL - SINGLE FAMILY",
+                site_city="MIAMI",
+                mail_city="HOUSTON",
+            )
         ],
     )
-    assert code == 0
-    assert [(r["Market"], r["Owner name (source)"]) for r in rows] == [
-        ("miami", "SUN LLC"),
-        ("nashville", "SMITH, JOHN"),
-    ]
-    miami, nashville = rows
-    assert list(miami) == COLUMNS
-    assert miami["Entity"] == "SUN LLC"
-    assert miami["Property"] == "100 OCEAN DR MIAMI FL 33139"
-    assert miami["Lives far?"] == "Yes"
-    assert miami["Lead source detail"] == "DBPR Miami-Dade"
-    assert miami["Date added"] == "2026-12-01"
-    assert miami["First name"] == miami["Email"] == miami["Tier"] == ""  # nada inventado
-    assert nashville["Entity"] == ""
-    assert nashville["Property"] == "1029 DELMAS AVE NASHVILLE TN 37216"
-    assert nashville["Mailing address"] == "5 PEACH ST ATLANTA GA 30301"
+    r = by_owner(rows, "CARLOS GOMEZ")
+    assert r["Entity"] == ""
+    assert (r["First name"], r["Last name"]) == ("Carlos", "Gomez")
 
 
-def test_units_are_summed_per_owner(tmp_path):
-    _, rows = build(tmp_path, [dbpr("TWO LLC", units="3", street=f"{n} A ST") for n in (1, 2)], [])
-    assert rows == []  # 3 + 3 = 6 unidades: se descarta
+def test_miami_licensed_to_another_party(tmp_path):
+    rows = build_leads(
+        tmp_path,
+        [dbpr("FISHER ISLAND CLUB INC", "1 FISHER ISLAND DR", "UNIT 101")],
+        [parcel("F3", "1 FISHER ISLAND DR", "101", "JANE SMITH", mail_city="MIAMI BEACH")],
+    )
+    r = by_owner(rows, "JANE SMITH")
+    assert r["Ownership check"] == "Differs"
+    assert r["Licence signal"] == "Licensed to another party"
+    assert r["Current management"] == "Operator-licensed"
+    assert r["Lives far?"] == "No"  # owner mailing city equals property city
 
 
-def test_empty_dataset_fails(tmp_path):
-    code, rows = build(tmp_path, [dbpr("HOTEL INC", type_code="2001")], [])
-    assert (code, rows) == (2, [])
+def test_nashville_still_produced_and_sorted(tmp_path):
+    rows = build_leads(
+        tmp_path,
+        [dbpr("SUN LLC", "100 OCEAN DR", "UNIT 5")],
+        [parcel("F1", "100 OCEAN DR", "5", "SUN LLC")],
+        nash_rows=[nash("WITHOUTLIMITS LLC")],
+    )
+    markets = [r["Market"] for r in rows]
+    assert "miami" in markets and "nashville" in markets
+    assert markets == sorted(markets)  # sorted by market first
+    nrow = by_owner(rows, "WITHOUTLIMITS LLC")
+    assert nrow["Market"] == "nashville" and nrow["Entity"] == "WITHOUTLIMITS LLC"
 
 
-def test_is_entity():
-    assert is_entity("WITHOUTLIMITSBIZ, LLC")
-    assert is_entity("SMITH FAMILY TRUST")
-    assert not is_entity("CLAUER, JAMES & BARLOWE, KRISTIN")
+def test_empty_when_nothing_matches(tmp_path):
+    rows = build_leads(
+        tmp_path,
+        [dbpr("HOTEL LLC", "400 COLLINS AVE", "UNIT 1")],
+        [parcel("F5", "400 COLLINS AVE", "1", "HOTEL LLC", dor="HOTEL OR MOTEL : HOTEL")],
+    )
+    assert rows == []

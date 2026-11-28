@@ -1,4 +1,4 @@
-"""Logging en una línea por evento, legible en CloudWatch."""
+"""One-line-per-event logging, readable in CloudWatch."""
 
 import logging
 import os

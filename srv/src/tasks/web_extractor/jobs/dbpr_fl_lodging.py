@@ -1,9 +1,9 @@
-"""Licencias de alojamiento de Florida DBPR (Hotels & Restaurants), archivo por distrito.
+"""Florida DBPR lodging licenses (Hotels & Restaurants), one file per district.
 
-Página: https://www2.myfloridalicense.com/hotels-restaurants/lodging-public-records/
-El distrito 1 cubre Miami-Dade y Monroe. Incluye vacation rentals: License Type Code
-2006 (Resort Condominium, CNDO) y 2007 (Resort Dwelling, DWEL). Se guarda el archivo completo,
-sin filtrar: la selección la hace `normalize`.
+Page: https://www2.myfloridalicense.com/hotels-restaurants/lodging-public-records/
+District 1 covers Miami-Dade and Monroe. Includes vacation rentals: License Type Code
+2006 (Resort Condominium, CNDO) and 2007 (Resort Dwelling, DWEL). The full file is stored,
+unfiltered: `normalize` does the selection.
 """
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ def decode(raw: bytes) -> str:
 @register
 class DbprFlLodging:
     name = "dbpr-fl-lodging"
-    description = "Licencias de alojamiento DBPR, distrito 1 (Miami-Dade y Monroe)"
+    description = "DBPR lodging licenses, district 1 (Miami-Dade and Monroe)"
 
     def extract(self, ctx: JobContext) -> Iterator[Item]:
         for url in DISTRICT_FILES.values():

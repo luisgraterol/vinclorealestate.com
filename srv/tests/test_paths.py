@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from common.paths import latest_raw_key, new_run_id, normalized_key, raw_key
+from common.paths import athena_key, export_key, latest_raw_key, new_run_id, raw_key
 from common.storage import LocalStorage
 from conftest import write_raw
 
@@ -10,9 +10,12 @@ def test_raw_key_uses_date_partition():
     assert key == "raw/job-a/date=2026-12-01/run=120000-abc123/data.jsonl"
 
 
-def test_normalized_key():
-    key = normalized_key("leads", date(2026, 12, 1), "leads.csv")
-    assert key == "normalized/leads/date=2026-12-01/leads.csv"
+def test_athena_key_is_partitioned_parquet():
+    assert athena_key("leads", date(2026, 12, 1)) == "athena/leads/date=2026-12-01/leads.parquet"
+
+
+def test_export_key_is_separate_csv_prefix():
+    assert export_key("leads", date(2026, 12, 1)) == "exports/leads/date=2026-12-01/leads.csv"
 
 
 def test_run_id_sorts_by_time():
@@ -30,7 +33,7 @@ def test_latest_raw_key_picks_newest_run_not_after_date(tmp_path):
     ]:
         write_raw(tmp_path, "job-a", d, run, [{"x": 1}])
     write_raw(tmp_path, "job-ab", "2026-12-01", "235959-eeeeee", [{"x": 1}])
-    # una corrida fallida (parcial) más reciente no cuenta
+    # a later failed (partial) run must not be chosen
     partial = tmp_path / "raw/job-a/date=2026-12-01/run=080000-ffffff/data.partial.jsonl"
     partial.parent.mkdir(parents=True)
     partial.write_text("{}\n")

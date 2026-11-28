@@ -30,7 +30,7 @@ def test_writer_uploads_partial_data_on_failure(tmp_path):
     key = "raw/j/date=2026-12-01/run=1/data.jsonl"
     with pytest.raises(RuntimeError), RawWriter(storage, key, "j", "1") as w:
         w.write("u", {"n": 1})
-        raise RuntimeError("se cayó la fuente")
+        raise RuntimeError("source failed")
     partial = "raw/j/date=2026-12-01/run=1/data.partial.jsonl"
     assert storage.list_keys("raw/") == [partial]
     assert len(list(read_records(storage, partial))) == 1
